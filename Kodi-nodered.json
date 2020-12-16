@@ -10,7 +10,7 @@
       "id":"d97b3c4a.4ded3",
       "type":"debug",
       "z":"ecbcf639.5c872",
-      "name":"Return from kodi",
+      "name":"Debug",
       "active":true,
       "tosidebar":true,
       "console":false,
@@ -19,8 +19,8 @@
       "targetType":"full",
       "statusVal":"",
       "statusType":"auto",
-      "x":910,
-      "y":100,
+      "x":870,
+      "y":27,
       "wires":[
          
       ]
@@ -30,7 +30,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Play/Pause",
-      "func":"var IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n    params: {\"playerid\": 1}  }}\nelse\n    return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.select\",\n    params: {\"playerid\": 1}  }}\n;",
+      "func":"var IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    {var MyPlayerID=flow.get('MyPlayerID') || 1; \n        return {\"payload\":   \n                {\"jsonrpc\": \"2.0\", \n                \"id\": 1, \n                \"method\": \"Player.PlayPause\",\n                params: {\"playerid\": MyPlayerID}  \n                }   \n               }\n        \n    }\nelse\n    return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.select\"\n        \n    }}\n;",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -48,7 +48,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Cursor navigate",
-      "func":"MyDirection=msg.button.slice(7,99)\nMyDirection = MyDirection.toLowerCase()\nif (MyDirection == \"enter\" )\n    {MyDirection = \"select\"\n    var IsPlayerActive=flow.get('IsPlaying') || false;\n\n    if (IsPlayerActive)     \n        { return {\"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n        params: {\"playerid\": 1}  }}\n        }\n    } \n\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.\"+MyDirection}\n};",
+      "func":"MyDirection=msg.button.slice(7,99)\nMyDirection = MyDirection.toLowerCase()\nif (MyDirection == \"enter\" )\n    {MyDirection = \"select\"\n    var IsPlayerActive=flow.get('IsPlaying') || false;\n    var MyPlayerID=flow.get('MyPlayerID') || 1;    \n\n    if (IsPlayerActive)     \n        { return {\"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n        params: {\"playerid\": MyPlayerID}  }}\n        }\n    } \n\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.\"+MyDirection}\n};",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -66,7 +66,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Stop",
-      "func":"\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.Stop\",\n    params: {\"playerid\": 1}  }\n};",
+      "func":"\nvar MyPlayerID=flow.get('MyPlayerID') || 1; \n\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.Stop\",\n    params: {\"playerid\": MyPlayerID}\n    }\n};",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -131,7 +131,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"SetSubtitle",
-      "func":"return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n    params: {\"window\": \"subtitlesearch\"}\n\n    \n    }\n};\n\nsubtitlesearch\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.Subtitle\"\n    \n    }\n};",
+      "func":"return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n    params: {\"window\": \"subtitlesearch\"}\n\n    \n    }\n};\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -195,12 +195,12 @@
       "id":"352f91d3.bf13e6",
       "type":"mqtt in",
       "z":"ecbcf639.5c872",
-      "name":"Meta",
+      "name":"MQTT-Meta",
       "topic":"meta/Kodi player/#",
       "qos":"2",
       "datatype":"auto",
       "broker":"920bfa37.0c7b9",
-      "x":90,
+      "x":110,
       "y":500,
       "wires":[
          [
@@ -286,13 +286,18 @@
          },
          {
             "t":"cont",
+            "v":"LANGUAGE",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
             "v":"POWER",
             "vt":"str"
          }
       ],
       "checkall":"true",
       "repair":false,
-      "outputs":11,
+      "outputs":12,
       "x":350,
       "y":580,
       "wires":[
@@ -327,6 +332,9 @@
             "9124b056.42a628"
          ],
          [
+            "146e79f5.d8fdc6"
+         ],
+         [
             "6fdc3e95.356a6"
          ]
       ]
@@ -341,6 +349,11 @@
       "rules":[
          {
             "t":"cont",
+            "v":"{\"id\":99",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
             "v":"method\":\"Player.OnPlay\"",
             "vt":"str"
          },
@@ -351,24 +364,27 @@
          },
          {
             "t":"cont",
-            "v":"{\"id\":99",
+            "v":"",
             "vt":"str"
          }
       ],
       "checkall":"true",
       "repair":false,
-      "outputs":3,
+      "outputs":4,
       "x":410,
       "y":40,
       "wires":[
          [
-            "d14e32e1.8410f8"
-         ],
-         [
-            "d14e32e1.8410f8"
-         ],
-         [
             "896e953.d03cce8"
+         ],
+         [
+            "d14e32e1.8410f8"
+         ],
+         [
+            "d14e32e1.8410f8"
+         ],
+         [
+            
          ]
       ]
    },
@@ -377,16 +393,16 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"",
-      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyEvent = mystatus.method\n\nif (MyEvent == \"Player.OnStop\") {\n   IsActive = false } \nelse {\n   IsActive = true}\nflow.set('IsPlaying',IsActive);\n\n\nreturn {\n   payload: MyEvent, myfield: IsActive \n    }\n    ",
+      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyEvent = mystatus.method\n\nif (MyEvent == \"Player.OnStop\") {\n   IsActive = false \n   MyPlayerID = 0\n   flow.set('MyPlayerìd',0)    \n   } \nelse {\n   IsActive = true\n   MyPlayerID = mystatus.result[0].playerid\n   flow.set('MyPlayerìd',MyPlayerID);\n  }\n\nflow.set('IsPlaying',IsActive);\n\n\nreturn {\n   payload: MyEvent, myfield: IsActive , MyPlayerID: MyPlayerID\n    }\n    ",
       "outputs":1,
       "noerr":0,
       "initialize":"",
       "finalize":"",
       "x":620,
-      "y":40,
+      "y":60,
       "wires":[
          [
-            "b1ffdf59.11d2f"
+            "d97b3c4a.4ded3"
          ]
       ]
    },
@@ -395,36 +411,17 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"CheckIsPlaying",
-      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyPlayer = mystatus.result\nIsActive = false\nfor(var i in MyPlayer) {\n       IsActive = true;\n   }\nflow.set('IsPlaying',IsActive);\n\n\nreturn {\n   payload: IsActive\n    }",
+      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyPlayer = mystatus.result\nIsActive = false\nfor(var i in MyPlayer) {\n       IsActive = true;\n   }\n\nflow.set('IsPlaying',IsActive);\nif (IsActive == true)\n   {NowPlayerID = mystatus.result[0].playerid\n   flow.set('MyPlayerìd',NowPlayerID);\n  }\nelse\n  {NowPlayerID = 0\n  flow.set('MyPlayerìd',0)\n  }\n\nreturn {\n   MyStatus: IsActive,\n   payload: mystatus,\n   MyPlayerìd: NowPlayerID\n    }",
       "outputs":1,
       "noerr":0,
       "initialize":"",
       "finalize":"",
       "x":640,
-      "y":80,
+      "y":27,
       "wires":[
          [
             "d97b3c4a.4ded3"
          ]
-      ]
-   },
-   {
-      "id":"b1ffdf59.11d2f",
-      "type":"debug",
-      "z":"ecbcf639.5c872",
-      "name":"Status",
-      "active":true,
-      "tosidebar":true,
-      "console":false,
-      "tostatus":false,
-      "complete":"true",
-      "targetType":"full",
-      "statusVal":"",
-      "statusType":"auto",
-      "x":870,
-      "y":40,
-      "wires":[
-         
       ]
    },
    {
@@ -522,12 +519,30 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Power",
-      "func":"\n    if (msg.button == \"POWER OFF\" ) \n       return {\"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"System.Shutdown\"\n         }    \n}\n//;System.Shutdown",
+      "func":"MyPower=msg.button.slice(6,99)\nMyPower = MyPower.toLowerCase()\nif (MyPower == \"off\" )\n   return {\"payload\":   \n       {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n       params: {\"window\": \"shutdownmenu\"}\n       }\n   }\nelse\n   return {\"payload\":  \n      {\"jsonrpc\": \"2.0\", \"method\": \"GUI.ShowNotification\", \"params\": \n         {\"title\": \"NEEO-Metadriver\", \n         \"message\": \"NEEO-connection active\", \n             \"displaytime\":'\"5000\"'\n         },\n      \"id\": 1}\n   }\n\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
       "finalize":"",
       "x":570,
+      "y":840,
+      "wires":[
+         [
+            "c6f20bac.b162a8"
+         ]
+      ]
+   },
+   {
+      "id":"146e79f5.d8fdc6",
+      "type":"function",
+      "z":"ecbcf639.5c872",
+      "name":"SUb-Sync",
+      "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\"payload\":   \n      {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n      params: {\"window\":\"subtitlesearch\"}\n      }    \n    }\nelse\n    return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n\n",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":590,
       "y":800,
       "wires":[
          [
@@ -538,7 +553,7 @@
    {
       "id":"cee2f1a2.0a99d",
       "type":"websocket-client",
-      "path":"ws://192.168.0.40:9090",
+      "path":"ws://192.168.0.46:9090",
       "tls":"",
       "wholemsg":"false"
    },

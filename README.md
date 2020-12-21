@@ -15,7 +15,7 @@ We start by installing the flow into Node-red.
 4) In the import dialog, at the bottom select "New flow", then click on "Select a file to import".
 5) Navigate to the location where you saved A), select it and click on the red button "Import" in the import-dialog. Move your mouse to place all nodes and wires in the flow and place them.
 6) Chek for any warning- or error-messages. If not, the flow is imported. You can give it a nie name, by double clicking the name in the TAB, then choose rename (you can delete it here a well).
-7) Next step is configuring the IP-addresses in this flow: the Brain's IP-address (and Kodi's IP-address.  Change the flow's IP-address for brain (left-top node, called "[ws] NEEO-BRAIN") by double cliking on it; you'll see the properties for websocket-Meta.
+7) Next step is configuring the IP-addresses in this flow: the Brain's IP-address (and Kodi's IP-address.  Change the flow's IP-address for brain (left-top node, called "[ws] MQTT-META") by double cliking on it; you'll see the properties for websocket-Meta.
 8) Next to "URL", you'll see the currently defined IP, with at the right a pencil-iconm. Use that icon to change the IP-address into the address of your own NEEO-Brain. Confirm the change and confirm again. 
 9) Do the same for the KODI-node, at the right bottom of the flow, specifying Kodi's IP-address.
 10) Important!! Changes in flows aren't active directly, but only AFTER deplohying the flow. Node-0red GUI tells you that you've got changes pending when the "Deploy"button at the right top-corner is highlighted red. Click the button and Node-red will try to deploy the changes.  
@@ -34,7 +34,7 @@ The following Buttons are defined and mapped to functions in Node-red:
 - "VOLUME UP" & "VOLUME DOWN"
 - "CURSOR UP", DOWN, LEFT & RIGHT"; navigating the cursor
 - "PAGE UP & DOWN"; navigating an entire page
-- "CHANNEL UP & DOWN"; same as "PAGE UP & DOWN"
+- "CHANNEL UP & DOWN"; same as "PAGE UP & DOWN" (doesn't work, probably doesn't work on mediaplayer)
 - "PLAY"; context-aware... while playing: pause and play, otherwise "select"
 - "STOP"; stop the current player
 - "LANGUAGE"; Opens window for synchronizing the subtitles (start earlier or delay them); back to exit

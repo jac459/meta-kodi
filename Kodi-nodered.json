@@ -19,8 +19,8 @@
       "targetType":"full",
       "statusVal":"",
       "statusType":"auto",
-      "x":870,
-      "y":27,
+      "x":950,
+      "y":40,
       "wires":[
          
       ]
@@ -30,7 +30,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Play/Pause",
-      "func":"var IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    {var MyPlayerID=flow.get('MyPlayerID') || 1; \n        return {\"payload\":   \n                {\"jsonrpc\": \"2.0\", \n                \"id\": 1, \n                \"method\": \"Player.PlayPause\",\n                params: {\"playerid\": MyPlayerID}  \n                }   \n               }\n        \n    }\nelse\n    return {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.select\"\n        \n    }}\n;",
+      "func":"var MyPlayerID=flow.get('MyPlayerID') || 9;\n\nif ((MyPlayerID == 0) || (MyPlayerID == 9 ) )\n    {return{ \n        \"payload\":   \n            {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.select\"\n            }\n        }\n    }\nelse\n    return {\n        \"payload\":   \n            {\"jsonrpc\": \"2.0\", \n            \"id\": 1, \n            \"method\": \"Player.PlayPause\",\n            params: {\"playerid\": MyPlayerID}  \n            },\"playerid\": MyPlayerID   \n       }\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -39,6 +39,7 @@
       "y":440,
       "wires":[
          [
+            "d97b3c4a.4ded3",
             "c6f20bac.b162a8"
          ]
       ]
@@ -48,7 +49,7 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Cursor navigate",
-      "func":"MyDirection=msg.button.slice(7,99)\nMyDirection = MyDirection.toLowerCase()\nif (MyDirection == \"enter\" )\n    {MyDirection = \"select\"\n    var IsPlayerActive=flow.get('IsPlaying') || false;\n    var MyPlayerID=flow.get('MyPlayerID') || 1;    \n\n    if (IsPlayerActive)     \n        { return {\"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n        params: {\"playerid\": MyPlayerID}  }}\n        }\n    } \n\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.\"+MyDirection}\n};",
+      "func":"MyDirection=msg.button.slice(7,99)\nMyDirection = MyDirection.toLowerCase()\nif (MyDirection == \"enter\" )\n    {MyDirection = \"select\"\n    var MyPlayerID=flow.get('MyPlayerID') || 0;    \n\n    if (MyPlayerID != 0 )     \n        { return {\"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n        params: {\"playerid\": MyPlayerID}  }}\n        }\n    } \n\nreturn {\"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.\"+MyDirection}\n};",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -57,7 +58,8 @@
       "y":520,
       "wires":[
          [
-            "c6f20bac.b162a8"
+            "c6f20bac.b162a8",
+            "d97b3c4a.4ded3"
          ]
       ]
    },
@@ -101,9 +103,9 @@
       "id":"c6f20bac.b162a8",
       "type":"websocket out",
       "z":"ecbcf639.5c872",
-      "name":"KODI",
+      "name":"KODI ",
       "server":"",
-      "client":"cee2f1a2.0a99d",
+      "client":"58a6298c.dcdcd",
       "x":890,
       "y":680,
       "wires":[
@@ -114,10 +116,10 @@
       "id":"5d1d541e.d90f44",
       "type":"websocket in",
       "z":"ecbcf639.5c872",
-      "name":"NEEO-BRAIN",
+      "name":"Kodi-woonkamer",
       "server":"",
-      "client":"cee2f1a2.0a99d",
-      "x":130,
+      "client":"58a6298c.dcdcd",
+      "x":140,
       "y":60,
       "wires":[
          [
@@ -178,16 +180,16 @@
       "type":"function",
       "z":"ecbcf639.5c872",
       "name":"Get Activeplayer",
-      "func":"return {\"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"Player.GetActivePlayers\", \n    \"id\": 99}\n}",
+      "func":"var KodiStarted=flow.get('KodiStarted') || \"NO\"\nvar MyPlayerID=flow.get('MyPlayerID') || 0;\n\nreturn {\"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"Player.GetActivePlayers\", \n    \"id\": 99},\n    KodiStarted: KodiStarted,\n    MyPlayerID: MyPlayerID\n}",
       "outputs":1,
       "noerr":0,
       "initialize":"",
       "finalize":"",
-      "x":640,
+      "x":420,
       "y":300,
       "wires":[
          [
-            "c6f20bac.b162a8"
+            "459939c9.302818"
          ]
       ]
    },
@@ -364,15 +366,23 @@
          },
          {
             "t":"cont",
-            "v":"",
+            "v":"\"method\":\"System.OnQuit\"",
             "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"\"result\":\"OK\"",
+            "vt":"str"
+         },
+         {
+            "t":"else"
          }
       ],
-      "checkall":"true",
+      "checkall":"false",
       "repair":false,
-      "outputs":4,
-      "x":410,
-      "y":40,
+      "outputs":6,
+      "x":390,
+      "y":60,
       "wires":[
          [
             "896e953.d03cce8"
@@ -384,6 +394,12 @@
             "d14e32e1.8410f8"
          ],
          [
+            "3e116a39.effd0e"
+         ],
+         [
+            "19f92541.992d83"
+         ],
+         [
             
          ]
       ]
@@ -392,14 +408,14 @@
       "id":"d14e32e1.8410f8",
       "type":"function",
       "z":"ecbcf639.5c872",
-      "name":"",
-      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyEvent = mystatus.method\n\nif (MyEvent == \"Player.OnStop\") {\n   IsActive = false \n   MyPlayerID = 0\n   flow.set('MyPlayerìd',0)    \n   } \nelse {\n   IsActive = true\n   MyPlayerID = mystatus.result[0].playerid\n   flow.set('MyPlayerìd',MyPlayerID);\n  }\n\nflow.set('IsPlaying',IsActive);\n\n\nreturn {\n   payload: MyEvent, myfield: IsActive , MyPlayerID: MyPlayerID\n    }\n    ",
+      "name":"Playstop/start",
+      "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyEvent = mystatus.method\n\nif (MyEvent == \"Player.OnStop\") {\n   IsActive = false \n   MyPlayerID = 0\n   flow.set('MyPlayerìd',0)    \n   } \nelse {\n   IsActive = true\n   MyPlayerID = mystatus.result[0].playerid\n   flow.set('MyPlayerìd',MyPlayerID);\n  }\n\n\nreturn {\n   payload: mystatus, MyEvent, myfield: IsActive , MyPlayerID: MyPlayerID\n    }\n    ",
       "outputs":1,
       "noerr":0,
       "initialize":"",
       "finalize":"",
       "x":620,
-      "y":60,
+      "y":80,
       "wires":[
          [
             "d97b3c4a.4ded3"
@@ -416,8 +432,8 @@
       "noerr":0,
       "initialize":"",
       "finalize":"",
-      "x":640,
-      "y":27,
+      "x":620,
+      "y":40,
       "wires":[
          [
             "d97b3c4a.4ded3"
@@ -482,12 +498,13 @@
       "id":"a416a66c.c2fcb8",
       "type":"debug",
       "z":"ecbcf639.5c872",
-      "name":"",
+      "name":"NEEO-Brain",
       "active":true,
       "tosidebar":true,
       "console":false,
       "tostatus":false,
-      "complete":"false",
+      "complete":"true",
+      "targetType":"full",
       "statusVal":"",
       "statusType":"auto",
       "x":410,
@@ -551,7 +568,69 @@
       ]
    },
    {
-      "id":"cee2f1a2.0a99d",
+      "id":"3e116a39.effd0e",
+      "type":"function",
+      "z":"ecbcf639.5c872",
+      "name":"Kodi stopped",
+      "func":"flow.set('KodiStarted',\"NO\");\nreturn null\n//{ payload:  \"Kodi stopped\"} ",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":620,
+      "y":120,
+      "wires":[
+         [
+            
+         ]
+      ]
+   },
+   {
+      "id":"459939c9.302818",
+      "type":"switch",
+      "z":"ecbcf639.5c872",
+      "name":"",
+      "property":"KodiStarted",
+      "propertyType":"msg",
+      "rules":[
+         {
+            "t":"eq",
+            "v":"YES",
+            "vt":"str"
+         }
+      ],
+      "checkall":"true",
+      "repair":false,
+      "outputs":1,
+      "x":630,
+      "y":300,
+      "wires":[
+         [
+            "c6f20bac.b162a8",
+            "d97b3c4a.4ded3"
+         ]
+      ]
+   },
+   {
+      "id":"19f92541.992d83",
+      "type":"function",
+      "z":"ecbcf639.5c872",
+      "name":"OK-message-KODI",
+      "func":"var KodiStarted=flow.get('KodiStarted') || \"NO\"\nif (KodiStarted==\"YES\") // we were alreay up\n    {return null\n    }\nflow.set('KodiStarted',\"YES\");\nreturn {\n        \"payload\":  \n            {\"jsonrpc\": \"2.0\", \"method\": \"GUI.ShowNotification\", \n                \"params\": \n                    {\"title\": \"NEEO-Metadriver\", \n                    \"message\": \"NEEO-connection active\", \n                    \"displaytime\":5000\n                    },\n            \"id\": 98\n            }\n        }\n",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":640,
+      "y":180,
+      "wires":[
+         [
+            "c6f20bac.b162a8"
+         ]
+      ]
+   },
+   {
+      "id":"58a6298c.dcdcd",
       "type":"websocket-client",
       "path":"ws://192.168.0.46:9090",
       "tls":"",
@@ -561,7 +640,7 @@
       "id":"920bfa37.0c7b9",
       "type":"mqtt-broker",
       "name":"Spare neeo brain",
-      "broker":"192.168.0.26",
+      "broker":"192.168.0.31",
       "port":"1883",
       "clientid":"",
       "usetls":false,

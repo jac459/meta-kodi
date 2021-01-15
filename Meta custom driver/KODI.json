@@ -55,8 +55,8 @@
       "MUTE TOGGLE": {"label":"", "type":"static", "command":""}
    },
    "directories":{
-     "MOVIES": {"label":"", "feeders": {
-             "Inputs":{"label":"", "commandset": [{"type":"mqtt", "command":"{\"topic\":\"meta/kodi\"}", "queryresult":"$.result.movies.*", "itemname":"DYNAMIK JSON.parse(\"$Result\").label"}]}
+     "Content": {"label":"", "feeders": {
+             "Inputs":{"label":"", "commandset": [{"type":"mqtt", "command":"{\"topic\":\"meta/KODI/Content\"}", "queryresult":"$.*", "itemname":"DYNAMIK JSON.parse(\"$Result\").label"}]}
           }
      }
  }  

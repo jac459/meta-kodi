@@ -181,26 +181,11 @@
             "t":"cont",
             "v":"POWER",
             "vt":"str"
-         },
-         {
-            "t":"cont",
-            "v":"TVShows",
-            "vt":"str"
-         },
-         {
-            "t":"cont",
-            "v":"Movies",
-            "vt":"str"
-         },
-         {
-            "t":"cont",
-            "v":"Music",
-            "vt":"str"
          }
       ],
       "checkall":"true",
       "repair":false,
-      "outputs":15,
+      "outputs":12,
       "x":550,
       "y":480,
       "wires":[
@@ -239,15 +224,6 @@
          ],
          [
             "d89f4261.8bdce"
-         ],
-         [
-            
-         ],
-         [
-            
-         ],
-         [
-            
          ]
       ]
    },
@@ -292,7 +268,7 @@
       "type":"function",
       "z":"bbca45a7.a7fce8",
       "name":"Menu",
-      "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ShowOSD\"  }\n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n",
+      "func":"if (msg.MyPlayerID != 0) \n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ShowOSD\"  }\n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -355,7 +331,7 @@
       "y":640,
       "wires":[
          [
-            
+            "9ac56e1b.0a2528"
          ]
       ]
    },
@@ -434,24 +410,6 @@
       "wires":[
          [
             "bfb06a6c.d7ef5"
-         ]
-      ]
-   },
-   {
-      "id":"44746e00.e9cf2",
-      "type":"function",
-      "z":"bbca45a7.a7fce8",
-      "name":"Power",
-      "func":"MyPower=msg.button.slice(6,99)\nMyPower = MyPower.toLowerCase()\nif (MyPower == \"off\" )\n   return {\n       url: msg.url,\n       \"payload\":   \n       {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n       params: {\"window\": \"shutdownmenu\"}\n       }\n   }\nelse\n   return {\n   url: msg.url,\n    \"payload\":  \n      {\"jsonrpc\": \"2.0\", \"method\": \"GUI.ShowNotification\", \"params\": \n         {\"title\": \"NEEO-Metadriver\", \n         \"message\": \"NEEO-connection active\", \n             \"displaytime\":'\"5000\"'\n         },\n      \"id\": 1}\n   }\n\n",
-      "outputs":1,
-      "noerr":0,
-      "initialize":"",
-      "finalize":"",
-      "x":870,
-      "y":680,
-      "wires":[
-         [
-            
          ]
       ]
    },

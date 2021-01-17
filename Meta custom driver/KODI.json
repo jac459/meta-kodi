@@ -53,13 +53,7 @@
       "MENU": {"label":"", "type":"static", "command":""},
       "SELECT": {"label":"", "type":"static", "command":""},
       "MUTE TOGGLE": {"label":"", "type":"static", "command":""}
-   },
-   "directories":{
-     "Content": {"label":"", "feeders": {
-             "Inputs":{"label":"", "commandset": [{"type":"mqtt", "command":"{\"topic\":\"meta/KODI/Content\"}", "queryresult":"$.*", "itemname":"DYNAMIK JSON.parse(\"$Result\").label"}]}
-          }
-     }
- }  
+   } 
 }
 
 

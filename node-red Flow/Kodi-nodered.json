@@ -1,15 +1,15 @@
 [
    {
-      "id":"bbca45a7.a7fce8",
+      "id":"dfb6ebd2.4aa9e8",
       "type":"tab",
       "label":"Kodi",
       "disabled":false,
       "info":""
    },
    {
-      "id":"8d95652b.f434c",
+      "id":"8721f806.53c708",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Play/Pause",
       "func":"if (msg.MyPlayerID != 0 )\n    return {\n        url: msg.url,\n        \"payload\":   \n            {\"jsonrpc\": \"2.0\", \n            \"id\": 1, \n            \"method\": \"Player.PlayPause\",\n            params: {\"playerid\": msg.MyPlayerID}  \n            },\"playerid\": msg.MyPlayerID   \n       }\nelse \n    return {\n           url: msg.url,\n           \"payload\":   \n               {\"jsonrpc\": \"2.0\", \n               \"id\": 1, \n               \"method\": \"input.select\"},\n            \"playerid\": msg.MyPlayerID  \n            }\n       ",
       "outputs":1,
@@ -20,14 +20,15 @@
       "y":240,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"92ebb54b.5f44b8",
+      "id":"b4f23977.40f6c",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Cursor navigate",
       "func":"MyDirection=msg.button.slice(7,99)\nMyDirection = MyDirection.toLowerCase()\n\nif (MyDirection == \"enter\" )  \n    {MyDirection = \"select\"\n    if (msg.MyPlayerID == 0) \n       return {\n       url: msg.url,\n       \"payload\":   \n       {\"jsonrpc\": \"2.0\", \"id\": 1, \n       \"method\": \"Input.\"+MyDirection},MyPlayerID: msg.MyPlayerID,\n    }\n    else\n        { return {\n            url: msg.url,\n            \"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.PlayPause\",\n        params: {\"playerid\": msg.MyPlayerID}  }}\n        }\n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n      {\"jsonrpc\": \"2.0\", \"id\": 1, \n      \"method\": \"Input.\"+MyDirection}, MyPlayerID: msg.MyPlayerID,\n      }\n",
       "outputs":1,
@@ -38,14 +39,15 @@
       "y":320,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"7c7fd2d7.e246d4",
+      "id":"2ff5858c.35db52",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Stop",
       "func":"var MyPlayerID = 0\nvar IsActive = true\n\nglobal.set('IsPlaying',false);\nglobal.set('IsActive',IsActive);\nglobal.set('MPlayerID'),MyPlayerID\n\nreturn {\n    url: msg.url,\n    \"payload\":  \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Player.Stop\",\n    params: {\"playerid\": msg.MyPlayerID}\n    }\n};",
       "outputs":1,
@@ -56,14 +58,15 @@
       "y":280,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"3f86a5a6.a3bda2",
+      "id":"3f02b372.fcf894",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"SetVolume ",
       "func":"\n    if (msg.button == \"VOLUME UP\" ) \n       {MyDirection=\"increment\"\n       }\n      else\n       {MyDirection=\"decrement\"         \n        }\n\n    return {\n    url: msg.url,\n    \"payload\":   \n        {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Application.SetVolume\",\n          \"params\" :{\"volume\":MyDirection}         \n         }    \n};",
       "outputs":1,
@@ -74,14 +77,15 @@
       "y":400,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"4ed1a42b.82c5bc",
+      "id":"52a9d032.6f025",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"SetSubtitle",
       "func":"return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n    params: {\"window\": \"subtitlesearch\"}\n\n    \n    }\n};\n",
       "outputs":1,
@@ -92,14 +96,14 @@
       "y":560,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"36fc8f5f.d4f8f8",
+      "id":"401c513f.78ea78",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Isolate button",
       "func":"// meta/Kodi player/default/button/POWER ON \n// 123456789A123456789B123456789C123456789D123456789E\n// meta/Samsung TV 2012/default/button/CURSOR ENTER\n// 123456789A123456789B123456789C123456789D123456789E     \n\nvar MyTopic = flow.get(\"MyTopic\")\n\nvar output = msg.topic.split(\"/\");\nvar name_meta = output[0];\nvar recipe = output[1];\nvar deviceid = output[2];\nvar command_type = output[3]; \nvar button = output[4];\nvar ipdata = deviceid.split(\":\")\n\nvar ip = ipdata[0]\nvar port = 8080 ; // ipdata[1]\n\nvar url = \"http://\"+ip+\":\"+port+\"/jsonrpc?request=\"\n\n\nreturn {MyPlayerID: msg.MyPlayerID,\n      button: button,\n      ip: ip, port: port,\n      url: url\n}",
       "outputs":1,
@@ -110,14 +114,14 @@
       "y":480,
       "wires":[
          [
-            "7cc2ada1.38aefc"
+            "34a9036f.93ff04"
          ]
       ]
    },
    {
-      "id":"7cc2ada1.38aefc",
+      "id":"34a9036f.93ff04",
       "type":"switch",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Switch input",
       "property":"button",
       "propertyType":"msg",
@@ -181,56 +185,130 @@
             "t":"cont",
             "v":"POWER",
             "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"TVShows",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"Movies",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"Music",
+            "vt":"str"
          }
       ],
       "checkall":"true",
       "repair":false,
-      "outputs":12,
+      "outputs":15,
       "x":550,
       "y":480,
       "wires":[
          [
-            "8d95652b.f434c"
+            "8721f806.53c708"
          ],
          [
-            "8d95652b.f434c"
+            "8721f806.53c708"
          ],
          [
-            "7c7fd2d7.e246d4"
+            "2ff5858c.35db52"
          ],
          [
-            "92ebb54b.5f44b8"
+            "b4f23977.40f6c"
          ],
          [
-            "a447215.aa828e"
+            "704ba054.06d38"
          ],
          [
-            "3f86a5a6.a3bda2"
+            "3f02b372.fcf894"
          ],
          [
-            "53047c8b.f70314"
+            "8c3daa9d.293a38"
          ],
          [
-            "f9ac4596.85db48"
+            "b78eaef7.6e891"
          ],
          [
-            "c2f5c31a.7fef7"
+            "2737b819.39d6a"
          ],
          [
-            "4ed1a42b.82c5bc"
+            "52a9d032.6f025"
          ],
          [
-            "85b6d2c3.921dd8"
+            "3ba6d0c5.3f8868"
          ],
          [
-            "d89f4261.8bdce"
+            "7130a64a.e2b518"
+         ],
+         [
+            "1e72263c.94bbea"
+         ],
+         [
+            "8e0346ce.7ae05"
+         ],
+         [
+            "8ac2a813.fbc7c8"
          ]
       ]
    },
    {
-      "id":"c2fc9d7.357ed6",
+      "id":"c97eb64a.b378f8",
+      "type":"switch",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Switch kodi-response",
+      "property":"payload",
+      "propertyType":"msg",
+      "rules":[
+         {
+            "t":"cont",
+            "v":"\"TVShowLibrary\"",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"{\"id\":\"MovieLibrary\"",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"{\"id\":\"MusicArtistLibrary\"",
+            "vt":"str"
+         },
+         {
+            "t":"cont",
+            "v":"\"id\":\"libMovies\"",
+            "vt":"str"
+         }
+      ],
+      "checkall":"false",
+      "repair":false,
+      "outputs":4,
+      "x":580,
+      "y":120,
+      "wires":[
+         [
+            "35bfe89a.cb1b78"
+         ],
+         [
+            "114dceae.ceafb9",
+            "b2b765f8.f317e"
+         ],
+         [
+            "2c196208.c41586"
+         ],
+         [
+            "114dceae.ceafb9"
+         ]
+      ]
+   },
+   {
+      "id":"97cfb1eb.449ac",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"CheckIsPlaying",
       "func":"mystatus = JSON.parse(msg.payload) // playerid} \nMyPlayer = mystatus.result\nvar MyTopic = flow.get(\"MyTopic\")\nif (mystatus.result === undefined)\n   return\n \nglobal.set('KodiStarted',\"YES\");\nIsActive = false\nfor(var i in MyPlayer) {\n       IsActive = true;\n   }\n\nglobal.set('IsPlaying',IsActive);\nif (IsActive == true)\n   {NowPlayerID = mystatus.result[0].playerid\n   global.set('MyPlayerID',NowPlayerID);\n  }\nelse\n  {NowPlayerID = 0\n  global.set('MyPlayerID',0)\n  }\n\nreturn {topic: MyTopic,\n   MyStatus: IsActive,\n   payload: mystatus,\n   MyPlayerID: NowPlayerID\n    }",
       "outputs":1,
@@ -241,14 +319,14 @@
       "y":480,
       "wires":[
          [
-            "36fc8f5f.d4f8f8"
+            "401c513f.78ea78"
          ]
       ]
    },
    {
-      "id":"c2f5c31a.7fef7",
+      "id":"2737b819.39d6a",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Back",
       "func":"return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.back\"\n    \n    }\n};",
       "outputs":1,
@@ -259,16 +337,16 @@
       "y":520,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"53047c8b.f70314",
+      "id":"8c3daa9d.293a38",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Menu",
-      "func":"if (msg.MyPlayerID != 0) \n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ShowOSD\"  }\n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n",
+      "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ShowOSD\"  }\n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -277,14 +355,15 @@
       "y":440,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"a447215.aa828e",
+      "id":"704ba054.06d38",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Page",
       "func":"MyDirection=msg.button.slice(5,99)\nMyDirection = MyDirection.toLowerCase()\n\nreturn {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ExecuteAction\", \n     \"params\": { \"action\": \"page\"+MyDirection }  \n    }\n};\n",
       "outputs":1,
@@ -295,14 +374,14 @@
       "y":360,
       "wires":[
          [
-            
+            "b2b765f8.f317e"
          ]
       ]
    },
    {
-      "id":"f9ac4596.85db48",
+      "id":"b78eaef7.6e891",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Channel",
       "func":"MyDirection=msg.button.slice(8,99)\nMyDirection = MyDirection.toLowerCase()\n\nreturn {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ExecuteAction\", \n     \"params\": { \"action\": \"page\"+MyDirection }  \n    }\n};",
       "outputs":1,
@@ -313,14 +392,14 @@
       "y":480,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"d89f4261.8bdce",
+      "id":"7130a64a.e2b518",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Power",
       "func":"MyPower=msg.button.slice(6,99)\nMyPower = MyPower.toLowerCase()\nif (MyPower == \"off\" )\n   return {\n       url: msg.url,\n       \"payload\":   \n       {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n       params: {\"window\": \"shutdownmenu\"}\n       }\n   }\nelse\n   return {\n   url: msg.url,\n    \"payload\":  \n      {\"jsonrpc\": \"2.0\", \"method\": \"GUI.ShowNotification\", \"params\": \n         {\"title\": \"NEEO-Metadriver\", \n         \"message\": \"NEEO-connection active\", \n             \"displaytime\":'\"5000\"'\n         },\n      \"id\": 1}\n   }\n\n",
       "outputs":1,
@@ -331,14 +410,14 @@
       "y":640,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b2b765f8.f317e"
          ]
       ]
    },
    {
-      "id":"85b6d2c3.921dd8",
+      "id":"3ba6d0c5.3f8868",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"SUb-Sync",
       "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\n       url: msg.url,\n      \"payload\":   \n      {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n      params: {\"window\":\"subtitlesearch\"}\n      }    \n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n\n",
       "outputs":1,
@@ -349,14 +428,219 @@
       "y":600,
       "wires":[
          [
-            "9ac56e1b.0a2528"
+            "b83d99be.d955d8"
          ]
       ]
    },
    {
-      "id":"9ac56e1b.0a2528",
+      "id":"b2b765f8.f317e",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Debug button convert",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1300,
+      "y":320,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"1e72263c.94bbea",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"GET-TVLibrary",
+      "func":"\nreturn {url: msg.url,\n   payload: \n        {\"jsonrpc\": \"2.0\", \n        \"params\": \n            {\"sort\": {\"order\": \"ascending\", \"method\": \"title\"},\n            \"filter\": \n                {\"operator\": \"contains\", \n                \"field\": \"title\", \"value\": \"Star\"}, \n            \"properties\": [\"title\", \"art\", \"file\"]\n            }, \n       \"method\": \"VideoLibrary.GetTVShows\", \n       \"id\": \"libMovies\"}\n}\n\nreturn {\n    url: msg.url,\n    \"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"VideoLibrary.GetTVShows\", \n    \"id\": \"TVShowLibrary\",\n    \"filter\": {\"operator\": \"contains\", \n        \"field\": \"title\", \"value\": \"resident\"}   \n   }\n   ,\n    KodiStarted: KodiStarted\n\n}",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":900,
+      "y":720,
+      "wires":[
+         [
+            "b83d99be.d955d8",
+            "b2b765f8.f317e"
+         ]
+      ]
+   },
+   {
+      "id":"35bfe89a.cb1b78",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Get TVSHows",
+      "func":"myJSON = JSON.parse(msg.payload) // playerid} \n\nreturn { \n    topic: \"meta/KODIContent\",\n    payload: myJSON}\nvar m_out=[]; //Array for message objects\n\nfor (var TVShow of myJSON.result.tvshows) {\n   var message=TVShow\n   var topic = \"meta/KODI/Content\"\n    var newmsg={payload:message,topic:topic}\n    m_out.push(newmsg);    \n}\nreturn[m_out];\n    ",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":900,
+      "y":80,
+      "wires":[
+         [
+            "293597b9.6d1fe",
+            "4e69120b.a363b4"
+         ]
+      ]
+   },
+   {
+      "id":"293597b9.6d1fe",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Parsed TVSHow",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1280,
+      "y":80,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"4e69120b.a363b4",
+      "type":"mqtt out",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"MQTT-out",
+      "topic":"",
+      "qos":"",
+      "retain":"true",
+      "broker":"920bfa37.0c7b9",
+      "x":1260,
+      "y":40,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"114dceae.ceafb9",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Get Movies",
+      "func":"myJSON = JSON.parse(msg.payload) // playerid} \n\nreturn { \n    topic: \"meta/KODIContent\",\n    payload: myJSON}\n\nvar m_out=[]; //Array for message objects\n\nfor (var Movie of myJSON.result.movies) {\n   var message=Movie\n   var topic = \"meta/KODI/Content\"\n    var newmsg={payload:message,topic:topic}\n    m_out.push(newmsg);    \n}\nreturn[m_out];\n//    topic: \"meta/KODIResult/\",",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":890,
+      "y":120,
+      "wires":[
+         [
+            "62c9ac85.1f2c4c",
+            "4e69120b.a363b4"
+         ]
+      ]
+   },
+   {
+      "id":"8e0346ce.7ae05",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"GET-MovieLibrary",
+      "func":"\n\nreturn {url: msg.url,\n   payload: \n        {\"jsonrpc\": \"2.0\", \n        \"params\": \n            {\"sort\": {\"order\": \"ascending\", \"method\": \"title\"},\n            \"filter\": \n                {\"operator\": \"contains\", \n                \"field\": \"title\", \"value\": \"Star\"}, \n    //        \"properties\": [\"title\", \"art\", \"file\"]\n            }, \n       \"method\": \"VideoLibrary.GetMovies\", \n       \"id\": \"libMovies\"}\n}\n \nreturn {\n    url: msg.url,\n    \"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"VideoLibrary.GetMovies\", \n    \"id\": \"MovieLibrary\"} //,\n//    KodiStarted: KodiStarted\n}",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":910,
+      "y":760,
+      "wires":[
+         [
+            "b2b765f8.f317e",
+            "b83d99be.d955d8"
+         ]
+      ]
+   },
+   {
+      "id":"62c9ac85.1f2c4c",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Parsed Movielist",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1280,
+      "y":120,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"2c196208.c41586",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Get MusicArtists",
+      "func":"myJSON = JSON.parse(msg.payload) // playerid} \nreturn { \n    topic: \"meta/KODIContent\",\n    payload: myJSON}\n\nvar m_out=[]; //Array for message objects\n\nfor (var Artist of myJSON.result.artists) {\n   var message=Artist\n   var topic = \"Kodi/MusicArtists\"\n    var newmsg={payload:message,topic:topic}\n    m_out.push(newmsg);    \n}\nreturn[m_out];",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":910,
+      "y":160,
+      "wires":[
+         [
+            "4e69120b.a363b4",
+            "613e6a4f.c1accc"
+         ]
+      ]
+   },
+   {
+      "id":"8ac2a813.fbc7c8",
+      "type":"function",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"GET-MusicArtistLibrary",
+      "func":"\nreturn {url: msg.url,\n   payload: \n        {\"jsonrpc\": \"2.0\", \n        \"params\": \n            {\"sort\": {\"order\": \"ascending\", \"method\": \"title\"},\n            \"filter\": \n                {\"operator\": \"contains\", \n                \"field\": \"artist\", \"value\": \"Rick\"}, \n    //        \"properties\": [\"title\", \"art\", \"file\"]\n            }, \n       \"method\": \"AudioLibrary.GetArtists\", \n       \"id\": \"libMovies\"}\n}\n\n\nreturn {\n    url: msg.url,\n    \"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"AudioLibrary.GetArtists\", \n    \"id\": \"MusicArtistLibrary\"}\n}",
+      "outputs":1,
+      "noerr":0,
+      "initialize":"",
+      "finalize":"",
+      "x":930,
+      "y":800,
+      "wires":[
+         [
+            "b83d99be.d955d8",
+            "b2b765f8.f317e"
+         ]
+      ]
+   },
+   {
+      "id":"613e6a4f.c1accc",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"Parsed MusiclLst",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1290,
+      "y":160,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"b83d99be.d955d8",
       "type":"http request",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"To KODI",
       "method":"POST",
       "ret":"txt",
@@ -370,14 +654,64 @@
       "y":480,
       "wires":[
          [
-            
+            "5e87f14c.4c0e5",
+            "c97eb64a.b378f8"
          ]
       ]
    },
    {
-      "id":"bfb06a6c.d7ef5",
+      "id":"5e87f14c.4c0e5",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"KODI-Response",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"payload",
+      "targetType":"msg",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1280,
+      "y":360,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"9fb08f49.9da16",
+      "type":"inject",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"",
+      "props":[
+         {
+            "p":"payload"
+         },
+         {
+            "p":"url",
+            "v":"http://192.168.0.50:8080/jsonrpc?request=",
+            "vt":"str"
+         }
+      ],
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "onceDelay":0.1,
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "x":540,
+      "y":720,
+      "wires":[
+         [
+            "1e72263c.94bbea"
+         ]
+      ]
+   },
+   {
+      "id":"2c81d34f.1591e4",
       "type":"http request",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"Check if playing ",
       "method":"POST",
       "ret":"txt",
@@ -391,14 +725,14 @@
       "y":400,
       "wires":[
          [
-            "c2fc9d7.357ed6"
+            "97cfb1eb.449ac"
          ]
       ]
    },
    {
-      "id":"f00cabaa.520258",
+      "id":"926fdbe5.e8bf58",
       "type":"function",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"GetActiverPlayerid",
       "func":"// meta/Kodi player/default/button/POWER ON \n// 123456789A123456789B123456789C123456789D123456789E\n// meta/Samsung TV 2012/default/button/CURSOR ENTER\n// 123456789A123456789B123456789C123456789D123456789E     \n\nflow.set(\"MyTopic\",msg.topic)\n\nvar output = msg.topic.split(\"/\");\nvar name_meta = output[0];\nvar recipe = output[1];\nvar deviceid = output[2];\nvar command_type = output[3]; \nvar button = output[4];\nvar ipdata = deviceid.split(\":\")\n\nvar ip = ipdata[0]\nvar port = 8080 ; // ipdata[1]\n\nvar url = \"http://\"+ip+\":\"+port+\"/jsonrpc?request=\"\nflow.set(\"url\",url); // Save the url we're working on\nflow.set(\"MyMsg\",msg.payload)\nvar MyTopic = context.get(\"MyTopic\")\n\nreturn {\n    url: url,\n    thetopic: MyTopic,\n    \"payload\":  \n   {\"jsonrpc\": \"2.0\", \n    \"method\": \"Player.GetActivePlayers\", \n    \"id\": 99}}",
       "outputs":1,
@@ -409,14 +743,130 @@
       "y":320,
       "wires":[
          [
-            "bfb06a6c.d7ef5"
+            "2c81d34f.1591e4",
+            "c7b10e56.3a27a"
          ]
       ]
    },
    {
-      "id":"90854e26.39f558",
+      "id":"c7b10e56.3a27a",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"debu temp",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":190,
+      "y":80,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"629820eb.b5648",
+      "type":"inject",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"",
+      "props":[
+         {
+            "p":"payload"
+         },
+         {
+            "p":"url",
+            "v":"http://192.168.0.50:8080/jsonrpc?request=",
+            "vt":"str"
+         }
+      ],
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "onceDelay":0.1,
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "x":540,
+      "y":760,
+      "wires":[
+         [
+            "8e0346ce.7ae05"
+         ]
+      ]
+   },
+   {
+      "id":"27309576.52c6aa",
+      "type":"inject",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"",
+      "props":[
+         {
+            "p":"payload"
+         },
+         {
+            "p":"url",
+            "v":"http://192.168.0.50:8080/jsonrpc?request=",
+            "vt":"str"
+         }
+      ],
+      "repeat":"",
+      "crontab":"",
+      "once":false,
+      "onceDelay":0.1,
+      "topic":"",
+      "payload":"",
+      "payloadType":"date",
+      "x":540,
+      "y":800,
+      "wires":[
+         [
+            "8ac2a813.fbc7c8"
+         ]
+      ]
+   },
+   {
+      "id":"22c63ecf.c00bc2",
       "type":"mqtt in",
-      "z":"bbca45a7.a7fce8",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"MQTT-Meta",
+      "topic":"meta/KODIContent",
+      "qos":"2",
+      "datatype":"auto",
+      "broker":"920bfa37.0c7b9",
+      "x":1110,
+      "y":200,
+      "wires":[
+         [
+            "37b6c6cd.73b412"
+         ]
+      ]
+   },
+   {
+      "id":"37b6c6cd.73b412",
+      "type":"debug",
+      "z":"dfb6ebd2.4aa9e8",
+      "name":"MQTT-Data",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"payload",
+      "targetType":"msg",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1270,
+      "y":200,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"bff535bf.cdebd8",
+      "type":"mqtt in",
+      "z":"dfb6ebd2.4aa9e8",
       "name":"MQTT-Meta",
       "topic":"meta/KODI/#",
       "qos":"2",
@@ -426,7 +876,8 @@
       "y":260,
       "wires":[
          [
-            "f00cabaa.520258"
+            "c7b10e56.3a27a",
+            "926fdbe5.e8bf58"
          ]
       ]
    },

@@ -18,7 +18,7 @@ We start by installing the flow into Node-RED.
 
 10) Important!! Changes in flows aren't active directly, but only AFTER deploying the flow. Node-RED GUI tells you that you've got changes pending when the "Deploy"button at the right top-corner is highlighted red. Click the button and Node-RED will try to deploy the changes.  
 
-# Now the flow is created and will be configured through discovery, we can add the Kodi-driver to the Brain through the METAdriver. This process is very simple: 
+Now the flow is created and will be configured through discovery, we can add the Kodi-driver to the Brain through the METAdriver. This process is very simple: 
 11) On the NEEO-remote, select the META-device, go to settings and select Library. Scroll through the list and select Kodi, then click on activate. This will enable the Kodi-driver. 
 12) Now use the normal NEEO-commands to create you Kodi-device with the Kodi driver we've just activated. Don't forget to "Unhide the recipe" and give it a nice name, with the shortcuts you want to use for Kodi.  
 

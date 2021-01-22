@@ -110,7 +110,8 @@
       "y":480,
       "wires":[
          [
-            "7cc2ada1.38aefc"
+            "7cc2ada1.38aefc",
+            "48327141.b4bc"
          ]
       ]
    },
@@ -295,7 +296,7 @@
       "y":360,
       "wires":[
          [
-            
+            "9ac56e1b.0a2528"
          ]
       ]
    },
@@ -340,7 +341,7 @@
       "type":"function",
       "z":"bbca45a7.a7fce8",
       "name":"SUb-Sync",
-      "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\n       url: msg.url,\n      \"payload\":   \n      {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n      params: {\"window\":\"subtitlesearch\"}\n      }    \n    }\nelse\n    return {\n    url: msg.url,\n    \"payload\":   \n    {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"Input.ContextMenu\"}\n    }\n;\n\n",
+      "func":"\nvar IsPlayerActive=flow.get('IsPlaying') || false;\n\nif (IsPlayerActive)\n    return {\n       url: msg.url,\n      \"payload\":   \n      {\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": \"GUI.ActivateWindow\",\n      params: {\"window\":\"subtitlesearch\"}\n      }    \n    }\nelse\n   return {url: msg.url,\n      payload: \n           {\"jsonrpc\": \"2.0\", \n          \"method\": \"Input.ExecuteAction\", \n          \"params\": \n            {\"action\": \"subtitledelay\"}, \n          \"id\": \"Sync\"}\n}\n\n",
       "outputs":1,
       "noerr":0,
       "initialize":"",
@@ -370,7 +371,7 @@
       "y":480,
       "wires":[
          [
-            
+            "68ded9ff.9096f8"
          ]
       ]
    },
@@ -428,6 +429,44 @@
          [
             "f00cabaa.520258"
          ]
+      ]
+   },
+   {
+      "id":"48327141.b4bc",
+      "type":"debug",
+      "z":"bbca45a7.a7fce8",
+      "name":"Input",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"true",
+      "targetType":"full",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":380,
+      "y":320,
+      "wires":[
+         
+      ]
+   },
+   {
+      "id":"68ded9ff.9096f8",
+      "type":"debug",
+      "z":"bbca45a7.a7fce8",
+      "name":"Answer Kodi",
+      "active":true,
+      "tosidebar":true,
+      "console":false,
+      "tostatus":false,
+      "complete":"payload",
+      "targetType":"msg",
+      "statusVal":"",
+      "statusType":"auto",
+      "x":1240,
+      "y":300,
+      "wires":[
+         
       ]
    },
    {

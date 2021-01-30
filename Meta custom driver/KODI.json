@@ -2,7 +2,7 @@
    "name":"KODI",
    "manufacturer":"Ton&JAC",
    "type":"MEDIAPLAYER",
-   "version":2,
+   "version":1,
    "discover":{
       "welcomeheadertext":"Kodi Driver",
       "welcomedescription":"powered by meta\nby JAC459",
@@ -18,7 +18,7 @@
       "name":"KODI",
       "manufacturer":"Ton&JAC",
       "type":"MEDIAPLAYER",
-      "version":2,
+      "version":1,
       "dynamicname":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name DYNAMIK_INST_END",
       "dynamicid":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] + \":\" + JSON.parse(\"$Result\").port DYNAMIK_INST_END",
       "variables":{
@@ -44,8 +44,17 @@
          "VideoFileType":"", 
          "VideoFile":"",     
          "VideoPlayFile":"",       
-         "ShowThumbnail":""           
+         "ShowThumbnail":"true",  
+         "ShowWatched":"true"           
       },
+      "persistedvariables":{
+         "ShowThumbnail":"true",
+         "ShowWatched":"true"
+       },
+       "switches":{
+         "Learn" : {"label":"Thumbnails", "listen":"ShowThumbnail", 
+                   "evalwrite":[{"variable":"ShowThumbnail", "value":"DYNAMIK (\"$ShowThumbnail\" == \"true\") ? \"false\":\"true\""}]}
+       },       
       "buttons":{
          "POWER ON":{
             "label":"",
@@ -157,7 +166,7 @@
             "type":"static",
             "command":""
          }
-      },
+      },   
       "directories":{
          "Collection":{"label":"TVShows",
             "feeders":{
@@ -174,8 +183,8 @@
                         "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetTVShows\",\"id\":\"TV\",\"params\":{\"properties\":[\"title\",\"thumbnail\",\"playcount\"],\"sort\":{\"order\":\"ascending\",\"method\":\"title\",\"ignorearticle\": true }}}",
                         "queryresult":"$.result.tvshows.*",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
-                        "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",                        
-                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\"",
+                        "itemname":"DYNAMIK JSON.parse(\"$Result\").label",                        
+                        "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\":\"\"",
                         "evalwrite":[{"variable":"TVShowTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                            {"variable":"TVShowid","value":"DYNAMIK JSON.parse(\"$Result\").tvshowid"},
                            {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\""}],
@@ -198,9 +207,9 @@
                      },
                      {
                         "type":"http-get",
-                        "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\", \"tvshowid\", \"season\", \"showtitle\"]}}",
+                        "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\", \"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                         "queryresult":"$.result.seasons.*",
-                        "itemimage":"$TVShowBanner",                         
+                        "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?\"$TVShowBanner\":\"\"",                         
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
                         "evalwrite":[{"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],
                         "evalnext":[
@@ -221,10 +230,10 @@
                         "itemaction":""
                      },
                      {"type":"http-get",
-                        "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetEpisodes\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"filter\": { \"operator\": \"is\", \"field\":  \"season\", \"value\": \"$Seasonid\"} ,\"properties\":[\"title\",\"thumbnail\",\"playcount\"]}}",
+                        "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetEpisodes\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"filter\": { \"operator\": \"is\", \"field\":  \"season\", \"value\": \"$Seasonid\"} ,\"properties\":[\"title\",\"thumbnail\",\"playcount\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                         "queryresult":"$.result.episodes.*",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\"", 
+                     "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\":\"\"", 
                      "evalwrite":[{"variable":"EpisodeName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Episodeid","value":"DYNAMIK JSON.parse(\"$Result\").episodeid"}],
                      "evalnext":[
                         {
@@ -262,7 +271,7 @@
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\"", 
+                     "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\"\"\"", 
                      "evalwrite":[{"variable":"MovieTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                   {"variable":"Movieid","value":"DYNAMIK JSON.parse(\"$Result\").movieid"}, 
                                   {"variable":"MovieBanner","value": "DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\""}],
@@ -369,11 +378,12 @@
                               "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
                               "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/movie.jpg",
                               "evalwrite":[{"variable":"Source","value":"DYNAMIK JSON.parse(\"$Result\").label"},
+                                           {"variable":"VideoFile","value":"DYNAMIK JSON.parse(\"$Result\").file"},                                 
                                            {"variable":"VideoRootFile","value":"DYNAMIK JSON.parse(\"$Result\").file"}],
                               "evalnext":[
                                  {
                                     "test":true,
-                                    "then":"VideoRootFiles",
+                                    "then":"VideoDirectory",
                                     "or":""
                                  } 
                               ]}  
@@ -426,8 +436,8 @@
                               "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"Files.GetDirectory\",\"id\":\"VS2\",\"params\":{\"directory\":\"$VideoFile\",\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true}}}",
                               "queryresult":"$.result.files.*",
                               "itembrowse":"DYNAMIK JSON.parse(\"$Result\").file",
-                              "itemlabel":"DYNAMIK (JSON.parse(\"$Result\").label.length > 28)?JSON.parse(\"$Result\").label.slice(29,99):\"\"",
-                              "itemname":"DYNAMIK JSON.parse(\"$Result\").label.slice(1,28)",
+                              "itemlabel":"DYNAMIK (JSON.parse(\"$Result\").label.length > 28)?JSON.parse(\"$Result\").label.slice(28,99):\"\"",
+                              "itemname":"DYNAMIK JSON.parse(\"$Result\").label.slice(0,28)",
                               "itemimage":"DYNAMIK (JSON.parse(\"$Result\").filetype == \"directory\")?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/Folder.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/File.jpg\"",
                               "evalwrite":[{"variable":"VideoFile","value":"DYNAMIK JSON.parse(\"$Result\").file"},                                    
                                           {"variable":"VideoFileType","value":"DYNAMIK JSON.parse(\"$Result\").filetype"}],

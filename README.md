@@ -38,7 +38,7 @@ The following Buttons are defined and mapped to functions in Node-RED:
 - "CHANNEL UP & DOWN"; same as "PAGE UP & DOWN" (doesn't work, probably doesn't work on mediaplayer)
 - "PLAY"; context-aware... while playing: pause and play, otherwise "select"
 - "STOP"; stop the current player
-- "LANGUAGE"; Opens window for synchronizing the subtitles (start earlier or delay them); back to exit
+- "SYNCSUB"; Opens window for synchronizing the subtitles (start earlier or delay them); back to exit
 - "SUBTITLE"; Opens the subtitle-submenu. Allows browsing, downloading, enabling subtitles
 - "PAUSE"; pause or play while playing
 - "BACK"; exit a submenu or go up one level in a list/window dialog

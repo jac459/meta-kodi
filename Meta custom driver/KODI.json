@@ -178,8 +178,7 @@
                         "itemimage":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\"",
                         "evalwrite":[{"variable":"TVShowTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                            {"variable":"TVShowid","value":"DYNAMIK JSON.parse(\"$Result\").tvshowid"},
-                           {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\""},
-                           {"variable":"temp3","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http:\/\/\")?\"True\":\"False\")"}],
+                           {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\""}],
                            "evalnext":[
                            {
                               "test":true,
@@ -391,7 +390,7 @@
                            },
                            {
                               "type":"http-get",
-                              "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"Files.GetDirectory\",\"id\":\"MVS\",\"params\":{\"directory\":\"$File\"\",\"sort\":{\"order\":\"ascending\",\"method\":\"Label\",\"ignorearticle\": true}}}",
+                              "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"Files.GetDirectory\",\"id\":\"VS1\",\"params\":{\"directory\":\"$VideoRootFile\",\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true}}}",
                               "queryresult":"$.result.files.*",
                               "itembrowse":"DYNAMIK JSON.parse(\"$Result\").file",
                               "itemlabel":"DYNAMIK JSON.parse(\"$Result\").filetype",
@@ -420,16 +419,16 @@
                               "type":"static",
                               "command":"",
                               "itemtype":"tile",
-                              "itemaction":"",
-                              "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/tvshow.jpg"
+                              "itemaction":""
                            },
                            {
                               "type":"http-get",
-                              "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"Files.GetDirectory\",\"id\":\"MVS\",\"params\":{\"directory\":\"$File\"\",\"sort\":{\"order\":\"ascending\",\"method\":\"Label\",\"ignorearticle\": true}}}",
+                              "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"Files.GetDirectory\",\"id\":\"VS2\",\"params\":{\"directory\":\"$VideoFile\",\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true}}}",
                               "queryresult":"$.result.files.*",
                               "itembrowse":"DYNAMIK JSON.parse(\"$Result\").file",
-                              "itemlabel":"DYNAMIK JSON.parse(\"$Result\").filetype",
-                              "itemname":"DYNAMIK JSON.parse(\"$Result\").label",
+                              "itemlabel":"DYNAMIK (JSON.parse(\"$Result\").label.length > 28)?JSON.parse(\"$Result\").label.slice(29,99):\"\"",
+                              "itemname":"DYNAMIK JSON.parse(\"$Result\").label.slice(1,28)",
+                              "itemimage":"DYNAMIK (JSON.parse(\"$Result\").filetype == \"directory\")?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/Folder.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/File.jpg\"",
                               "evalwrite":[{"variable":"VideoFile","value":"DYNAMIK JSON.parse(\"$Result\").file"},                                    
                                           {"variable":"VideoFileType","value":"DYNAMIK JSON.parse(\"$Result\").filetype"}],
                               "evalnext":[
@@ -450,7 +449,7 @@
                   "commandset":[
                      {
                         "type":"http-rest",
-                        "command":"{\"verb\":\"post\",\"call\":\"$KODIREQ\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"id\":\"MOVIEP\",\"params\":{\"item\":  {\"file\":\"$VideoFile\"}}}}"
+                        "command":"{\"verb\":\"post\",\"call\":\"$KODIREQ\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Open\",\"id\":\"VPlay\",\"params\":{\"item\":  {\"file\":\"$VideoFile\"}}}}"
                      } 
                   ]}
                }

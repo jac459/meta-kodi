@@ -1,4 +1,5 @@
 ### meta-kodi
+## V 0.3
 
 ## This repository contains supporting material for NEEO-Metadriver to control Kodi-applications over HTTPC (POST).
 
@@ -26,7 +27,8 @@ If you want to make changes to the NEEO-buttons in this driver, you can use the 
 
 ## Supported buttons and functions
 
-This is the second release of Kodi-driver. It contains all you normally need to control a Kodi player.
+This is the third release of Kodi-driver. It contains all you normally need to control a Kodi player, but this release adds browsing
+directories on your KODI-instance.  
 The second release adds discovery of Kodi devices, so no IP-configuration is required anymore  
 The following Buttons are defined and mapped to functions in Node-RED:
 - "POWER OFF"; will shutdown the system where Kodi-player is running (itm will actually call the dialog that allows shutdown)
@@ -46,3 +48,12 @@ The following Buttons are defined and mapped to functions in Node-RED:
 - "Movies"; Future use with directories on the NEEO-remote.
 - "Music"; Future use with directories on the NEEO-remote.
 - "MUTE TOGGLE"; silence the player.
+
+New in this release are 4 directories:
+- TVShows:      Directory that opens KODI library and shows all the TVShows that are defined.
+- Movies:       Directory that opens KODI library and shows all the Movies that are defined.
+- Moviesets:    Directory that opens KODI library and shows all the Movies that are defined within MovieSets.
+- VideoSources: Directory that opens KODI library for all the VIDEO-sources. Browsing is currently limited to one-level deep;
+                If you open a directory, it will now show an empty list. In essence, you can play files only at the highestlevel now.
+
+Thumbnails are shown when KODI has the image defined as an HTTP(s)-link, images stored locally by Kodi aren't displayed yet  

@@ -56,11 +56,11 @@ New in this release are 4 directories:
 - VideoSources: Directory that opens KODI library for all the VIDEO-sources. 
                 Then you can browse each source as a file-explorer. Browsing through directories is currently limited to 7 levels deep because of technical and practical limits.
  
+For Movies and TVSHows, a Checkmark is shown if all underlying elements are shown.
 Thumbnails are shown when KODI has the image defined as an HTTP(s)-link, images stored locally by Kodi aren't displayed yet.
 If you feel this annoying, you can switch off thumbnais with the switch "Thumbnails".     
 
 
 To-Do:
 - Fix 7 levels limit
-- Add "Watched indicator""
 - Add thumbnails for locally stored images (smb-type).

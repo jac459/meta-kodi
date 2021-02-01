@@ -53,9 +53,14 @@ New in this release are 4 directories:
 - TVShows:      Directory that opens KODI library and shows all the TVShows that are defined.
 - Movies:       Directory that opens KODI library and shows all the Movies that are defined.
 - Moviesets:    Directory that opens KODI library and shows all the Movies that are defined within MovieSets.
-- VideoSources: Directory that opens KODI library for all the VIDEO-sources. Browsing through directories is currently one-way:
-                You can navigate through the directories to your file (icon's show what a directory or file is) and start a movie.
-                Back will not work properly.
+- VideoSources: Directory that opens KODI library for all the VIDEO-sources. 
+                Then you can browse each source as a file-explorer. Browsing through directories is currently limited to 7 levels deep because of technical and practical limits.
  
 Thumbnails are shown when KODI has the image defined as an HTTP(s)-link, images stored locally by Kodi aren't displayed yet.
 If you feel this annoying, you can switch off thumbnais with the switch "Thumbnails".     
+
+
+To-Do:
+- Fix 7 levels limit
+- Add "Watched indicator""
+- Add thumbnails for locally stored images (smb-type).

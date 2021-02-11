@@ -288,10 +288,10 @@
                         "queryresult":"$.result.tvshows.*",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                         "itemname":"DYNAMIK JSON.parse(\"$Result\").label",                        
-                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\":\"\"",
+                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
                         "evalwrite":[{"variable":"TVShowTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
-                           {"variable":"TVShowid","value":"DYNAMIK JSON.parse(\"$Result\").tvshowid"},
-                           {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\""}],
+                           {"variable":"TVShowid","value":"DYNAMIK JSON.parse(\"$Result\").tvshowid"}, 
+                           {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image:\/\/\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http:\/\/192.168.0.46:8080/vfs\/\").slice(0, -1):\"\""}],
                            "evalnext":[
                            {
                               "test":true,
@@ -313,9 +313,10 @@
                         "type":"http-get",
                         "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\",\"playcount\",\"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                         "queryresult":"$.result.seasons.*",
-                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?\"$TVShowBanner\":\"\"",                         
+                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                        "evalwrite":[{"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],
+                        "evalwrite":[{"variable":"MYRESULT","value":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\""},
+                                     {"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],
                         "evalnext":[
                            {
                               "test":true,                                          
@@ -338,8 +339,8 @@
                         "queryresult":"$.result.episodes.*",
                         "itemaction":"TVShowPlay",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\":\"\"", 
-                     "evalwrite":[{"variable":"EpisodeName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Episodeid","value":"DYNAMIK JSON.parse(\"$Result\").episodeid"}]
+                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
+                        "evalwrite":[{"variable":"EpisodeName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Episodeid","value":"DYNAMIK JSON.parse(\"$Result\").episodeid"}]
                      }
                   ]},
                "TVShowPlay":{   
@@ -370,7 +371,7 @@
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):\"\":\"\"", 
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                      "itemaction":"MoviePlay",
                      "evalwrite":[{"variable":"MovieTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                   {"variable":"Movieid","value":"DYNAMIK JSON.parse(\"$Result\").movieid"}, 
@@ -405,10 +406,10 @@
                         "queryresult":"$.result.sets.*",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                         "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label","itemimage":"DYNAMIK JSON.parse(\"$Result\").label",
-                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":\"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/movie.jpg\"",
+                        "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                         "evalwrite":[{"variable":"SetTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                      {"variable":"Setid","value":"DYNAMIK JSON.parse(\"$Result\").setid"},
-                                     {"variable":"MovieBanner","value":"DYNAMIK JSON.parse(\"$Result\").thumbnail"}],
+                                     {"variable":"MovieBanner","value":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://192.168.0.46:8080/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\""}],
                         "evalnext":[
                            {
                               "test":true,
@@ -431,7 +432,7 @@
                         "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetMovieSetDetails\",\"id\":\"MVS\",\"params\":{\"setid\":$Setid,\"properties\": [\"thumbnail\",\"playcount\"]}}",
                         "queryresult":"$.result.setdetails.movies.*",
                         "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                        "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":\"\"",
+                        "itemimage":"$MovieBanner",
                         "itemaction":"MoviePlaySet",                        
                         "evalwrite":[{"variable":"MovieTitle","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Movieid","value":"DYNAMIK JSON.parse(\"$Result\").movieid"}]
                      }
@@ -455,7 +456,7 @@
                               "type":"static",
                               "command":"",
                               "itemtype":"tile",
-                              "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/movie.jpg",                        
+                              "itemimage":"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg",                        
                               "itemaction":""
                            },
                            {
@@ -465,7 +466,7 @@
                               "itembrowse":"DYNAMIK JSON.parse(\"$Result\").file",
                               "itemname":"DYNAMIK JSON.parse(\"$Result\").file",
                               "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                              "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/movie.jpg",
+                              "itemimage":"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg",
                               "evalwrite":[{"variable":"Source","value":"DYNAMIK JSON.parse(\"$Result\").label"},
                                            {"variable":"VideoFile","value":"DYNAMIK JSON.parse(\"$Result\").file"},                                 
                                            {"variable":"VideoRootFile","value":"DYNAMIK JSON.parse(\"$Result\").file"}],

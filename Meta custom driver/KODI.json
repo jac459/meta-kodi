@@ -2,7 +2,7 @@
    "name":"KODI",
    "manufacturer":"Ton&JAC",
    "type":"MEDIAPLAYER",
-   "version":3,
+   "version":4,
    "discover":{
       "welcomeheadertext":"Kodi Driver",
       "welcomedescription":"powered by meta\nby JAC459",
@@ -18,7 +18,7 @@
       "name":"KODI",
       "manufacturer":"Ton&JAC",
       "type":"MEDIAPLAYER",
-      "version":3,
+      "version":4,
       "dynamicname":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name DYNAMIK_INST_END",
       "dynamicid":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] + \":\" + JSON.parse(\"$Result\").port DYNAMIK_INST_END",
       "variables":{
@@ -264,6 +264,16 @@
             "command":"",
             "evaldo":[{"test":true,"then":"__SELECT", "or":""}]  
          },
+         "AUDIO":
+            {"label":"",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"HTTP://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"AUDIO\"}}"
+         }, 
+         "LANGUAGE":
+            {"label":"",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"HTTP://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"LANGUAGE\"}}"
+         },         
          "MUTE TOGGLE":
             {"label":"",
                "type":"http-rest",

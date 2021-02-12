@@ -5,23 +5,31 @@
 
 ## Installation:
 
-# Two main files are required for installation:
-A) Kodi-nodered.json; A Node-RED flow that converts the NEEO-Metadriver buttons for Kodi towards the Kodi-player.
-B) Kodi.json; The button definitions for NEEO-Metadriver.
+# Installation.
+The consists of activating the CoreDriver called KODI in .meta.
+This is just a matter of goi g ibnto the .meta recipe on your remote or phone with neeo-app, then:
+- going to Libary.
+- Find KODI in the list and click it
+- Select Activate driver
+- Go back, select Danger zone then restart meta.
+- After one minute, you can add a KODI-device through the NEEO-gui (or the NEEO-app on your phone).
 
-# We start by installing the flow into Node-RED.
-1) Download A) (Kodi-nodered.json) to your computer and save it.
-2) Open Node-RED GUI in your browser (<IP-address BRAIN:1880>)
-3) In the top-right of the Node-RED GUI, you'll see a sub-menu icon (3 horizontal lines). Click that icon and choose import.
-4) In the import dialog, at the bottom select "New flow", then click on "Select a file to import".
-5) Navigate to the location where you saved A), select it and click on the red button "Import" in the import-dialog. Move your mouse to place all nodes and wires in the flow and place them.
-6) Check for any warning- or error-messages. If not, the flow is imported. You can give it a nie name, by double clicking the name in the TAB, then choose rename (you can delete it here a well).
-
-10) Important!! Changes in flows aren't active directly, but only AFTER deploying the flow. Node-RED GUI tells you that you've got changes pending when the "Deploy"button at the right top-corner is highlighted red. Click the button and Node-RED will try to deploy the changes.  
-
-# Now the flow is created and will be configured through discovery, we can add the Kodi-driver to the Brain through the METAdriver. This process is very simple: 
-11) On the NEEO-remote, select the META-device, go to settings and select Library. Scroll through the list and select Kodi, then click on activate. This will enable the Kodi-driver. 
-12) Now use the normal NEEO-commands to create you Kodi-device with the Kodi driver we've just activated. Don't forget to "Unhide the recipe" and give it a nice name, with the shortcuts you want to use for Kodi.  
+# Discovery
+This driver uses autodiscovery of your kodi-devices, so make sure your KODI is started before adding the device.
+In the NEEO-Settings, go to devices, then do an add device. Then type KODI as search argument. NEEO will find "Ton&JAC .meta KODI". 
+Select this driver, then click "Next". meta will search for KODI-instances and display the result. 
+Select an instance and assign it to the correct room.  
+The following shortcuts are handy, but you casn select the ones you like:
+Widgets:
+-Menu&Back
+Buttons:
+- Subtitle
+- SyncSub
+Directories
+- TVShows
+- MOvies/Moviesets
+Switch:
+ShowThumbnails
 
 ## If you want to make changes to the NEEO-buttons in this driver, you can use the file Kodi-json and activate this via the user activation folder. 
 
@@ -47,6 +55,7 @@ The following Buttons are defined and mapped to functions in Node-RED:
 - "TVShows"; Future use with directories on the NEEO-remote.
 - "Movies"; Future use with directories on the NEEO-remote.
 - "Music"; Future use with directories on the NEEO-remote.
+- "LANGUAGE" & "AUDIO": These buttons should (not able to test yet) swtich the Audio-language if multiple exist
 - "MUTE TOGGLE"; silence the player.
 
 New in this release are 4 directories:
@@ -57,10 +66,9 @@ New in this release are 4 directories:
                 Then you can browse each source as a file-explorer. Browsing through directories is currently limited to 7 levels deep because of technical and practical limits.
  
 For Movies and TVSHows, a Checkmark is shown if all underlying elements are shown.
-Thumbnails are shown when KODI has the image defined as an HTTP(s)-link, images stored locally by Kodi aren't displayed yet.
+Thumbnails are shown when KODI has them defined. Internally, KODI uses the actual video-file to show a thumbnail; currently, they can not be shown in the directory. 
 If you feel this annoying, you can switch off thumbnais with the switch "Thumbnails".     
 
 
 To-Do:
 - Fix 7 levels limit
-- Add thumbnails for locally stored images (smb-type).

@@ -2,7 +2,7 @@
    "name":"KODIPlayer",
    "manufacturer":"Ton&JAC",
    "type":"MEDIAPLAYER",
-   "version":1,
+   "version":2,
    "discover":{
       "welcomeheadertext":"Kodi Driver running fully within .meta",
       "welcomedescription":"powered by meta\nby JAC459",
@@ -18,7 +18,7 @@
       "name":"KODIPlayer",
       "manufacturer":"Ton&JAC",
       "type":"MEDIAPLAYER",
-      "version":1,
+      "version":2,
       "dynamicname":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name DYNAMIK_INST_END",
       "dynamicid":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] + \":\" + JSON.parse(\"$Result\").port DYNAMIK_INST_END",
       "variables":{
@@ -211,7 +211,7 @@
             {"label":"",
             "type":"static",
             "command":"",
-            "evalwrite":[{"variable":"Returntrue","value":"__PLAY2"},{"variable":"Returnfalse","value":"__SELECT"}],  
+            "evalwrite":[{"variable":"Returntrue","value":"__SYNCSUB"},{"variable":"Returnfalse","value":"__SELECT"}],  
             "evaldo":[{"test":true,"then":"__GetPlayerID", "or":""}]              
          },
          "__SYNCSUB":

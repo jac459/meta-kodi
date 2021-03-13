@@ -1,413 +1,518 @@
-{   "name":"KODIPlayer",
+{ "name":"KODIPlayer",
    "manufacturer":"Ton&JAC",
    "type":"MEDIAPLAYER",
-   "version":8,
+   "version":7,
    "discover":{
-      "welcomeheadertext":"Kodi Driver running fully within .meta",
-      "welcomedescription":"powered by meta\nby JAC459",
-      "command":{
-         "type":"static",
-         "command":"$LocalDevices",
-         "queryresult":[
-            "$.*[?(@.name=='xbmc-jsonrpc-h')]^"
-         ]
-      }
+     "welcomeheadertext":"Choose your KODI Instance",
+     "welcomedescription":"powered by meta\nby JAC459/TonO",
+     "command": {
+       "type": "static",
+       "command": "$LocalDevices",
+       "queryresult": [
+         "$.*[?(@.name=='xbmc-jsonrpc-h')]^[?(@property === 'addresses' && @[0].match(/./i))]^"
+      ]
+     }  
    },
-
-   "template":
-   {
-   "name":"KODIPlayer",
-   "manufacturer":"Ton&JAC",
-   "type":"MEDIAPLAYER",
-   "version":5,
-   "listeners" : {
-      "KODIListener" : {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",          
-       "evaldo":[ 
-                  {"test":"DYNAMIK ((JSON.parse(\"$Result\").method != \"undefined\") && (JSON.parse(\"$Result\").method == \"Player.OnPlay\"))", "then":"__GetPlayerID", "or":""},
-                  {"test":"DYNAMIK ((JSON.parse(\"$Result\").method != \"undefined\") && (JSON.parse(\"$Result\").method == \"Player.OnStop\"))", "then":"__GetPlayerID", "or":""},
-                  {"test":"DYNAMIK ((JSON.parse(\"$Result\").method != undefined) && (JSON.parse(\"$Result\").method == \"System.OnQuit\"))", "then":"__SYSTEMSTOP", "or":""},
-                  {"test":"DYNAMIK ((JSON.parse(\"$Result\").method != undefined) && (JSON.parse(\"$Result\").method == \"Application.OnVolumeChanged\"))", "then":"__VOLUMECHANGED", "or":""}
+   "template" : {
+      "name": "KODIPlayer",
+      "type":"MEDIAPLAYER",
+      "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name DYNAMIK_INST_END",
+      "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").fullname DYNAMIK_INST_END",
+      "manufacturer": "Ton&JAC",
+      "version": 7,
+      "listeners" : {
+         "KODIListener" : 
+            {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",          
+            "evaldo":[ 
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPause\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPause", "or":""},
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnResume\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPlay\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnStop\"))", "then":"__SetStopped", "or":""},
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"System.OnQuit\"))", "then":"__SYSTEMSTOP", "or":""},
+                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Application.OnVolumeChanged\"))", "then":"__GetPlayerID", "or":""}
                ]
-      }
-   },
-   "variables":{
-      "MyKODIIp":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] DYNAMIK_INST_END",
-      "MyKODIPort":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").port DYNAMIK_INST_END",
-      "RPCPort":"9090",
-      "KODIREQ":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=",    
-      "TVShowTitle": "", 
-      "TVShowid": "",
-      "TVShowBanner":"",         
-      "SeasonName":"",
-      "Seasonid":"",
-      "EpisodeName":"",
-      "Episodeid":"",
-      "MovieTitle":"",
-      "Movieid":"",
-      "MovieBanner":"",
-      "SetTitle":"",
-      "Setid": "",
-      "Source":"",
-      "File":"", 
-      "ReturnMenu":"",
-      "VideoRootFile":"",   
-      "VideoRootFileType":"", 
-      "VideoDirectory1":"",
-      "VideoDirectory2":"",
-      "VideoDirectory3":"",
-      "VideoDirectory4":"",
-      "VideoDirectory5":"",
-      "VideoDirectory6":"",
-      "VideoFileType":"", 
-      "VideoFile":"",     
-      "VideoPlayFile":"",       
-      "ShowThumbnail":"true",  
-      "ShowWatched":"true",
-      "ShutdownMenu":true,
-      "Window_ID":"", 
-      "CheckWindow_ID":"", 
-      "Fullscreen_ID":"12005",
-      "PlayerID": 0,
-      "PlayerSeek": "", 
-      "MYRESULT": "", 
-      "CacheBuilt": 0,
-      "CacheResidency": 0,
-      "CURSOR":""        
-   },
-   "persistedvariables":{
-      "ShowThumbnail":"true",
-      "ShutdownMenu":true,
-      "ShutdownImmed": "false",
-      "WatchFilter":"\"filter\": {\"field\": \"playcount\", \"operator\": \"is\", \"value\": \"0\"},", 
-      "ShowWatched":"true"
-    },
-    "switches":{
-      "Learn" : {"label":"Thumbnails", "listen":"ShowThumbnail", 
-       "evalwrite":[{"variable":"ShowThumbnail", "value":"DYNAMIK (\"$ShowThumbnail\" == \"true\") ? \"false\":\"true\""}]}
-    }, 
-   "labels": {
-     "My PlayerID": {
-       "label": "",
-       "listen": "PlayerID"
-     }
-   },     
-   "buttons":{          
-      "__GetPlayerID":
-      {"label":"",
-         "type":"http-rest",
-         "command":"{\"verb\":\"post\",\"call\":\"HTTP://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"GetPlayID\"}}",
-         "queryresult":"$.result[0]",
-         "evalwrite":[
-            {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
-            {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"}
+            },
+            "KODIInfo" : 
+            {"label":"",
+            "type":"http-get",
+            "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\": \"2.0\", \"id\": \"Getinfi-items\",\"method\":\"XBMC.GetInfoLabels\",\"params\": {\"labels\":[\"Player.PlaySpeed\",\"Player.Title\",\"Player.FinishTime\", \"VideoPlayer.OriginalTitle\",\"VideoPlayer.Title\",\"VideoPlayer.TVShowTitle\",\"VideoPlayer.Time\",\"VideoPlayer.Duration\"]}}",
+            "queryresult":"$.",
+                              "pooltime":"600000", "poolduration":"",
+            "evalwrite" : [ 
+               {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse('$Result')[0].result[\"VideoPlayer.Duration\"]"},
+               {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
+               {"variable" : "Player_Time",         "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Time\"]"},
+               {"variable" : "Player_OriginalTitle","value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.OriginalTitle\"]"},
+               {"variable" : "Player_Title",        "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Title\"]"},
+               {"variable" : "Player_TVShowTitle",  "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.TVShowTitle\"]"},
+               {"variable" : "Player_PlaySpeed",    "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.PlaySpeed\"]"}                 ]
+            }
+   
+      },
+      "variables":{
+         "VolumioURI": "http://DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] DYNAMIK_INST_END",
+         "MyKODIIp":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").addresses[0] DYNAMIK_INST_END",
+         "MyKODIPort":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").port DYNAMIK_INST_END",
+         "RPCPort":"9090",
+         "KODIREQ":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=",
+         "TVShowTitle": "", 
+         "TVShowid": "",
+         "TVShowBanner":"",         
+         "SeasonName":"",
+         "Seasonid":"",
+         "EpisodeName":"",
+         "Episodeid":"",
+         "MovieTitle":"",
+         "Movieid":"",
+         "MovieBanner":"",
+         "SetTitle":"",
+         "Setid": "",
+         "Source":"",
+         "File":"", 
+         "ReturnMenu":"",
+         "VideoRootFile":"",   
+         "VideoRootFileType":"", 
+         "VideoDirectory1":"",
+         "VideoDirectory2":"",
+         "VideoDirectory3":"",
+         "VideoDirectory4":"",
+         "VideoDirectory5":"",
+         "VideoDirectory6":"",
+         "VideoFileType":"", 
+         "VideoFile":"",     
+         "VideoPlayFile":"",       
+         "Window_ID":"", 
+         "CheckWindow_ID":"", 
+         "Fullscreen_ID":"12005",
+         "PlayerID": 0,
+         "PlayerSeek": "", 
+         "MYRESULT": "", 
+         "MyStatus":"Initial",
+         "CacheBuilt": 0,
+         "CacheResidency": 0,
+         "CURSOR":"",
+         "Player_Title":"",
+         "Player_PlaySpeed":"",
+         "Player_FinishTime":"",
+         "Player_OriginalTitle":"",
+         "Player_TVShowTitle":"",
+         "Player_Time":"",
+         "Player_Duration":"",
+         "SetShutdownCommand":"\"System.Shutdown\"",
+         "SetShutdownmenuCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}"
+      },
+      "persistedvariables": 
+         {
+         "ShowThumbnail":"true",
+         "ShutdownCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}",
+         "ShutdownMenu":true,
+         "ShutdownImmed": "false",
+         "WatchFilter":"\"filter\": {\"field\": \"playcount\", \"operator\": \"is\", \"value\": \"0\"},", 
+         "ShowWatched":true
+      }, 
+      "switches":{
+         "ShowThumbnail" : {"label":"Thumbnails", "listen":"ShowThumbnail", 
+                   "evalwrite":[{"variable":"ShowThumbnail", "value":"DYNAMIK (\"$ShowThumbnail\" == \"true\") ? \"false\":\"true\""}]}
+       },  
+      "labels": {
+         "PlayerID": {"label": "MyPlayerID","listen": "PlayerID"}, 
+         "MyStatus": {"label": "","listen": "MyStatus"},
+         "Player_Title": {"label": "Playing Title","listen": "Player_Title"},
+         "Player_FinishTime": {"label": "Playing FinishTime","listen": "Player_FinishTime"},
+         "Player_OriginalTitle": {"label": "Playing OriginalTitle","listen": "Player_OriginalTitle"},
+         "Player_TVShowTitle": {"label": "Playing TVShow","listen": "Player_TVShowTitle"},
+         "Player_Time": {"label": "Playing Time","listen": "Player_Time"},
+         "Player_Duration": {"label": "Playing Duration","listen": "Player_Duration"}
+      },
+      "sliders": {
+         "ShowWatched":
+            {"label":"Show Watched (n->Y)", "unit" : "N/Y", "listen" : "ShowWatched", 
+            "evaldo":[{"test":"DYNAMIK $Result","then":"__ClearNotWatchedSwitch","or":"__SetNotWatchedSwitch"}]},
+         "ShutdownMenu":
+            {"label":"Show shutdownmenu(N->Y)", "unit" : "N/Y", "listen" : "ShutdownMenu", 
+            "evaldo":[{"test":"DYNAMIK $Result","then":"__SetShutdownMenu","or":"__SetShutdownImmed"}]}
+      }, 
+      "buttons":{
+         "__SetPause":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "queryresult":"",
+            "evalwrite":[
+               {"variable":"MyStatus","value":"Paused"},
+               {"variable":"PlayerID","value":1}
             ]  
-      },         
-      "__CheckMenu":
-      {"label":"",
-      "type":"static",
-      "command":"",
-      "evalwrite":[
-         {"variable":"CacheResidency","value":"DYNAMIK let d = new Date();let x= d.getMinutes()*60000+d.getSeconds()*1000+d.getMilliseconds();x-$CacheBuilt"}
-      ],  
-      "evaldo":[
-               {"test":"DYNAMIK parseInt($CacheResidency)<1000","then":"__CacheCheckMenu", "or":"__HTTPCheckMenu"}]
-   },
-   "__CacheCheckMenu":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[
-            {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
-},
-"__HTTPCheckMenu":
-{"label":"",
-"type":"http-rest",
-"command":"{\"verb\":\"post\",\"call\":\"HTTP://$MyKODIIp:$MyKODIPort/jsonrpc?request=\",\"message\":{\"jsonrpc\":\"2.0\",\"id\":\"FillCache\",\"method\":\"GUI.GetProperties\",\"params\":{\"properties\":[\"currentwindow\",\"fullscreen\",\"currentcontrol\"]}}}",
-"queryresult":"$.result.currentwindow",
-"evalwrite":[
-   {"variable":"Window_ID","value":"DYNAMIK  ((\"$Result\" == \"undefined\"))?0:JSON.parse(\"$Result\").id"},
-   {"variable":"CacheBuilt","value":"DYNAMIK let d = new Date();d.getMinutes()*60000+d.getSeconds()*1000+d.getMilliseconds()"}
+         }, 
+         "__SetPlaying":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "queryresult":"",
+            "evalwrite":[
+               {"variable":"MyStatus","value":"Playing"},
+               {"variable":"PlayerID","value":1}
+               ]  
+         },
+         "__SetStopped":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "queryresult":"",
+            "evalwrite":[
+               {"variable":"MyStatus","value":"Stopped"},
+               {"variable":"PlayerID","value":0}
+               ]  
+         },    
+         "__GetPlayerID":
+            {"label":"",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
+            "queryresult":"$.result[0]",
+            "evalwrite":[
+               {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
+               {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"}
+               ]  
+         },         
+         "__CheckMenu":
+            {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[
+               {"variable":"CacheResidency","value":"DYNAMIK let d = new Date();let x= d.getMinutes()*60000+d.getSeconds()*1000+d.getMilliseconds();x-$CacheBuilt"}
             ],  
-"evaldo":[
-         {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
-},
-"__Nav_Menu":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\",\"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.$CURSOR\", \"id\":\"$CURSOR dialog\"}}"
-},         
-"__Nav_Playing":
-{"label":"",
-   "type":"webSocket",
-   "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Seek\",\"params\":{\"value\":\"$PlayerSeek\", \"playerid\": $PlayerID},\"id\":\"$CURSOR\"}}"
-},     
-"__Nav_Playing_Enter":     
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"Curs_Enter-play\",\"params\":{\"playerid\":$PlayerID}}}"
-   },
-"__INITIALISE": {"label": "", "type":"static", "command":"."
-   },
-"POWER ON":  
-   {"label":"",                                 
-      "type":"http-rest",
-      "command":"{\"verb\":\"post\",\"call\":\"HTTP://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"id\":\"Notification\",\"method\":\"GUI.ShowNotification\", \"params\":{\"title\": \"NEEO-Metadriver\",\"message\": \"NEEO-connection active\",\"displaytime\":5000}}}",
-      "evaldo":[{"test":true,"then":"__GetPlayerID", "or":""},
-         {"test":true, "then":"__INITIALISE", "or":""}
-      ]   
-   },
-"POWER OFF":  
-{"label":"",                                 
-   "type":"static",
-   "command":"",
-   "evaldo":[
-      {"test":"DYNAMIK $ShutdownMenu==true","then":"__MenuShutdown", "or":"__Shutdown"},                
-      {"test":true,"then":"__CLEANUP", "or":""}
-   ]
-},
-"__ShutDown":
-{"label":"",
-   "type":"webSocket",
-   "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"System.Shutdown\",\"id\":\"PowerOff\"}}"
-},
-   "__MenuShutdown": 
-{"label":"",
-   "type":"webSocket",
-   "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"id\":\"PowerOff\",\"params\":{\"window\": \"shutdownmenu\"}}}"
-},
-"__SetWatchedSwitch":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[
-      {"variable":"WatchFilter", "value":"\"filter\": {\"field\": \"playcount\", \"operator\": \"is\", \"value\": \"0\"},"}
-   ]
-},
-"__ClearWatchedSwitch":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[
-      {"variable":"WatchFilter", "value":""}
-   ]
-},
-"__SetShutdownMenu":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[
-      {"variable":"ShutdownImmed", "value":"false"}
-   ]
-},
-"__ClearShutdownMenu":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[
-      {"variable":"ShutdownImmed", "value":"true"}
-   ]
-},
-"STOP": 
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":"$PlayerID","then":"__STOP", "or":""}]                
-      },
-"__STOP":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Stop\",\"id\":\"STOP\",\"params\":{\"playerid\":$PlayerID}}}"
-      },
-"VOLUME UP":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetVolume\",\"id\":\"VolumeUP\",\"params\":{\"volume\":\"increment\"}}"
-},
-"VOLUME DOWN":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetVolume\",\"id\":\"VolumeDown\",\"params\":{\"volume\":\"decrement\"}}"
-},
-"CHANNEL UP":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"Channelup\",\"params\":{\"action\": \"pageup\"}}"
-},
-"CHANNEL DOWN":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"Channelown\",\"params\":{\"action\": \"pagedown\"}}}"
-},
-"CURSOR LEFT":
-   {"label":"",
-      "type":"static",
-      "command":"",
-      "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
-         {"variable":"CURSOR","value":"Left"},
-         {"variable":"PlayerSeek","value":"smallbackward"},
-         {"variable":"ReturnMenu","value":"__Nav_Playing"}
-      ],  
-      "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
-   },
-"CURSOR DOWN":
-   {"label":"",
-      "type":"static",
-      "command":"",
-      "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
-         {"variable":"CURSOR","value":"Down"},
-         {"variable":"PlayerSeek","value":"bigforward"},
-         {"variable":"ReturnMenu","value":"__Nav_Playing"}               
-      ],  
-      "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
-   },
-"CURSOR UP":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
-      {"variable":"CURSOR","value":"Up"},
-      {"variable":"PlayerSeek","value":"bigbackward"},
-      {"variable":"ReturnMenu","value":"__Nav_Playing"}            
-   ],  
-   "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
-},
-"CURSOR RIGHT":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
-      {"variable":"CURSOR","value":"Right"},
-      {"variable":"PlayerSeek","value":"smallforward"},
-      {"variable":"ReturnMenu","value":"__Nav_Playing"}            
-   ],  
-   "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
-},
-"CURSOR ENTER":
-{"label":"",
-   "type":"static",
-   "command":"",
-   "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
-      {"variable":"CURSOR","value":"Select"},
-      {"variable":"PlayerSeek","value":"N/A"},
-      {"variable":"ReturnMenu","value":"__Nav_Playing_Enter"}
-   ],  
-   "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
-},         
-"__SELECT":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.Select\",\"id\":\"Select\"}}"
-      },          
-"PAGE UP":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"Pageup\",\"params\":{\"action\": \"pageup\"}}"
-},
-"PAGE DOWN":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"Pagedown\",\"params\":{\"action\": \"pagedown\"}}"
-},
-"PLAY":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":"$PlayerID","then":"__PLAY", "or":"__SELECT"}]   
-},
-"__PLAY":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"STOP\",\"params\":{\"playerid\":$PlayerID}}}"
-},    
-"SYNCSUB":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":"$PlayerID","then":"__SYNCSUB", "or":"__SELECT"}]               
-},
-"__SYNCSUB":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ContextMenu\",\"id\":\"STOP\"}}"
-},          
-"SUBTITLE":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"id\":\"Subtitles\",\"params\":{\"window\": \"subtitlesearch\"}}}"
-},          
-"PAUSE":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":"$PlayerID","then":"__PAUSE", "or":"__SELECT"}]               
-},
-"__PAUSE":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"STOP\",\"params\":{\"playerid\":$PlayerID}}}"           
-},
-"BACK":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.back\",\"id\":\"Back\"}}"
-},
-"MENU":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":"$PlayerID","then":"__OSD", "or":"__MENU"}]               
-   },
-"__OSD":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ShowOSD\",\"id\":\"OSD\"}}"           
-},
-"__MENU":
-   {"label":"",                                 
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ContextMenu\",\"id\":\"Context\"}}"           
-},
-"SELECT":
-   {"label":"",
-   "type":"static",
-   "command":"",
-   "evaldo":[{"test":true,"then":"__SELECT", "or":""}]  
-},
-"AUDIO":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"AUDIO\"}}"
-}, 
-"LANGUAGE":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"LANGUAGE\"}}"
-},  
-"ShowShutdownMenu" : 
-   {"label":"ShutdownMenu", 
-      "type":"static",
-      "command":"",
-      "queryresult":"",
-      "evalwrite":[
-      {"variable":"ShutdownMenu","value":"DYNAMIK  ((\"$ShutdownMenu\" == \"true\"))?\"false\":\"true\""}
-   ]
-   },
-"ShowThumbnails" : 
-   {"label":"ShowThumbnail", 
-      "type":"static",
-      "command":"",
-      "evalwrite":
-      {"variable":"$ShowThumbnail","value":"DYNAMIK (\"$ShowThumbnail\"!=\"true\")?\"true\":\"false\""}
+            "evaldo":[
+               {"test":"DYNAMIK parseInt($CacheResidency)<1000","then":"__CacheCheckMenu", "or":"__httpCheckMenu"}]
+         },
+         "__CacheCheckMenu":
+            {"label":"",
+            "type":"static",
+             "command":"",
+            "evaldo":[
+               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
+         },
+         "__httpCheckMenu":
+            {"label":"",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\",\"message\":{\"jsonrpc\":\"2.0\",\"id\":\"FillCache\",\"method\":\"GUI.GetProperties\",\"params\":{\"properties\":[\"currentwindow\",\"fullscreen\",\"currentcontrol\"]}}}",
+            "queryresult":"$.result.currentwindow",
+            "evalwrite":[
+               {"variable":"Window_ID","value":"DYNAMIK  ((\"$Result\" == \"undefined\"))?0:JSON.parse(\"$Result\").id"},
+               {"variable":"CacheBuilt","value":"DYNAMIK let d = new Date();d.getMinutes()*60000+d.getSeconds()*1000+d.getMilliseconds()"}
+                  ],  
+            "evaldo":[
+               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
+         },
+         "__Nav_Menu":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\",\"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.$CURSOR\"}}"
+         },               
+         "__Nav_Playing":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Seek\",\"params\":{\"value\":\"$PlayerSeek\", \"playerid\": $PlayerID},\"id\":\"\"}}"
+         },     
+         "__Nav_Playing_Enter":     
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"\",\"params\":{\"playerid\":$PlayerID}}}"
+         },
+         "__INITIALISE": {"label": "", "type":"static", "command":"."
+         },
+         "Debug playerid":  
+         {"label":"",                                 
+            "type":"static",
+            "command":"",
+            "evaldo":[{"test":true,"then":"__GetPlayerID", "or":""}
+            ]   
+         },
+         "POWER ON":  
+         {"label":"",      
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
+            "queryresult":"$.result[0]",
+            "evalwrite":[
+               {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
+               {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"},
+               {"variable":"MyStatus","value":"DYNAMIK (\"$Result\"==\"undefined\")?\"Stopped\":JSON.parse(\"$Result\").playerid"},
+               {"variable":"CacheBuilt","value":"0"}
+            ],  
+            "evaldo":[{"test":true,"then":"__INITIALISE", "or":""},
+               {"test":true, "then":"__StartupMessage", "or":""},
+               {"test":"$PlayerID == 1", "then":"__CheckPlaying", "or":""}
 
-   },          
-"MUTE TOGGLE":
-   {"label":"",
-      "type":"webSocket",
-      "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetMute\",\"id\":\"Mute\"}}"           
-}   
-},      "directories":
-      {
-      "Collection":{"label":"TVShows",
+            ]   
+         },
+         "__CheckPlaying":
+         {"label":"",      
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetProperties\",\"params\": {\"playerid\":1,\"properties\":[\"speed\"]},\"id\":\"\"}}",
+            "queryresult":"$.result",
+            "evalwrite":[
+               {"variable":"MyStatus","value":"DYNAMIK JSON.parse(\"$Result\").speed == 0?\"Paused\":\"Playing\" "}
+            ]
+         },
+         "__StartupMessage":  
+         {"label":"",                                 
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"id\":\"POWER-ON\",\"method\":\"GUI.ShowNotification\", \"params\":{\"title\": \"NEEO-Metadriver\",\"message\": \"NEEO-connection active\",\"displaytime\":5000}}}"  
+         },
+         "POWER OFF":  
+         {"label":"",    
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":$ShutdownCommand,\"id\":\"shutdown\"}}",
+            "queryresult":"",
+            "evaldo":[
+               {"test":true,"then":"__PERSIST", "or":""},
+               {"test":true,"then":"__CLEANUP", "or":""}
+            ]
+         },
+         "__ShutDown":
+         {"label":"",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"System.Shutdown\",\"id\":\"shutdown\"}}",
+            "queryresult":"",
+            "evaldo":[
+               {"test":true,"then":"__PERSIST", "or":""}
+            ]
+         },
+         "__MenuShutdown": 
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"},\"id\":\"PowerOff\"}}",
+            "evaldo":[
+            {"test":true,"then":"__CLEANUP", "or":""},
+            {"test":true,"then":"__PERSIST", "or":""}
+            ]
+         },
+         "__SetNotWatchedSwitch":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[
+               {"variable":"WatchFilter", "value":"\"filter\": {\"field\": \"playcount\", \"operator\": \"is\", \"value\": \"0\"},"}
+            ]
+         },
+         "__ClearNotWatchedSwitch":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[
+               {"variable":"WatchFilter", "value":""}
+            ]
+         },
+         "__SetShutdownMenu":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[
+               {"variable":"ShutdownImmed", "value":"false"},
+               {"variable":"ShutdownCommand", "value":"$SetShutdownmenuCommand"}
+            ]
+         },
+         "__SetShutdownImmed":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[
+               {"variable":"ShutdownImmed", "value":"true"},
+               {"variable":"ShutdownCommand", "value":"$SetShutdownCommand"}
+
+            ]
+         },
+         "STOP": 
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evaldo":[{"test":"$PlayerID","then":"__STOP", "or":""}]                
+         },
+         "__STOP":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.Stop\",\"id\":\"\",\"params\":{\"playerid\":$PlayerID}}}"
+         },
+         "VOLUME UP":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetVolume\",\"id\":\"\",\"params\":{\"volume\":\"increment\"}}"
+         },
+         "VOLUME DOWN":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetVolume\",\"id\":\"\",\"params\":{\"volume\":\"decrement\"}}"
+         },
+         "CHANNEL UP":
+            {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
+         },
+         "CHANNEL DOWN":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
+         },
+         "CURSOR LEFT":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
+               {"variable":"CURSOR","value":"Left"},
+               {"variable":"PlayerSeek","value":"smallbackward"},
+               {"variable":"ReturnMenu","value":"__Nav_Playing"}
+            ],  
+            "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
+         },
+         "CURSOR DOWN":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
+               {"variable":"CURSOR","value":"Down"},
+               {"variable":"PlayerSeek","value":"bigforward"},
+               {"variable":"ReturnMenu","value":"__Nav_Playing"}               
+               ],  
+            "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
+         },
+         "CURSOR UP":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
+               {"variable":"CURSOR","value":"Up"},
+               {"variable":"PlayerSeek","value":"bigbackward"},
+               {"variable":"ReturnMenu","value":"__Nav_Playing"}            
+            ],  
+            "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
+         },
+         "CURSOR RIGHT":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
+               {"variable":"CURSOR","value":"Right"},
+               {"variable":"PlayerSeek","value":"smallforward"},
+               {"variable":"ReturnMenu","value":"__Nav_Playing"}            
+            ],  
+         "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
+         }, 
+         "CURSOR ENTER":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evalwrite":[{"variable":"CheckWindow_ID","value":"$Fullscreen_ID"},
+               {"variable":"CURSOR","value":"Select"},
+               {"variable":"PlayerSeek","value":"N/A"},
+               {"variable":"ReturnMenu","value":"__Nav_Playing_Enter"}
+            ],  
+         "evaldo":[{"test":"$PlayerID","then":"__CheckMenu", "or":"__Nav_Menu"}]   
+         },            
+         "__SELECT":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.Select\",\"id\":\"\"}}"
+         },          
+         "PAGE UP":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
+         },
+         "PAGE DOWN":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}"
+         },
+         "PLAY":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evaldo":[{"test":"$PlayerID","then":"__PLAY", "or":"__SELECT"}]   
+         },
+         "__PLAY":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"\",\"params\":{\"playerid\":$PlayerID}}}"
+         },    
+         "SYNCSUB":
+         {"label":"",
+            "type":"static",
+            "command":"",
+         "evaldo":[{"test":"$PlayerID","then":"__SYNCSUB", "or":"__SELECT"}]      
+         },
+         "__SYNCSUB":
+        {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"params\":{ \"action\": \"subtitledelay\"},\"id\":\"\"}}"
+         },          
+         "SUBTITLE":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"id\":\"\",\"params\":{\"window\": \"subtitlesearch\"}}}"
+         },          
+         "PAUSE":
+         {"label":"",
+         "type":"static",
+         "command":"",
+         "evaldo":[{"test":"$PlayerID","then":"__PAUSE", "or":"__SELECT"}]               
+         },
+         "__PAUSE":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"\",\"params\":{\"playerid\":$PlayerID}}}"           
+         },
+         "BACK":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.back\",\"id\":\"\"}}"
+         },
+         "MENU":
+         {"label":"",
+            "type":"static",
+         "command":"",
+         "evaldo":[{"test":"$PlayerID","then":"__OSD", "or":"__MENU"}]               
+         },
+         "__OSD":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ShowOSD\",\"id\":\"\"}}"           
+         },
+         "__MENU":
+         {"label":"",                                 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ContextMenu\",\"id\":\"\"}}"           
+         },
+         "SELECT":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "evaldo":[{"test":true,"then":"__SELECT", "or":""}]  
+         },
+         "AUDIO":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"\"}}"
+         }, 
+         "LANGUAGE":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"\"}}"
+         },  
+         "ShowShutdownMenu" : 
+         {"label":"ShutdownMenu", 
+            "type":"static",
+            "command":"",
+            "queryresult":"",
+            "evalwrite":[
+               {"variable":"ShutdownMenu","value":"DYNAMIK  ((\"$ShutdownMenu\" == \"true\"))?\"false\":\"true\""}
+            ]     
+         },
+         "MUTE TOGGLE":
+         {"label":"",
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Application.SetMute\",\"id\":\"\"}}"           
+         }
+      },
+      "directories":
+         {"Collection":{"label":"TVShows",
          "feeders":{
             "TVShows":{"label":"TVShow list",
                "commandset":[
@@ -423,10 +528,10 @@
                      "queryresult":"$.result.tvshows.*",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemname":"DYNAMIK JSON.parse(\"$Result\").label",                        
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
                      "evalwrite":[{"variable":"TVShowTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                         {"variable":"TVShowid","value":"DYNAMIK JSON.parse(\"$Result\").tvshowid"}, 
-                        {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image:\/\/\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs\/\").slice(0, -1):\"\""}],
+                        {"variable":"TVShowBanner","value":"DYNAMIK (JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image:\/\/\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs\/\").slice(0, -1):\"\""}],
                         "evalnext":[
                         {
                            "test":true,
@@ -448,7 +553,7 @@
                      "type":"http-get",
                      "command":"$KODIREQ{\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\",\"playcount\",\"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                      "queryresult":"$.result.seasons.*",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
                      "evalwrite":[
                                   {"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],
@@ -474,7 +579,7 @@
                      "queryresult":"$.result.episodes.*",
                      "itemaction":"TVShowPlay",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\"",
                      "evalwrite":[{"variable":"EpisodeName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Episodeid","value":"DYNAMIK JSON.parse(\"$Result\").episodeid"}]
                   }
                ]},
@@ -506,7 +611,7 @@
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemname":"DYNAMIK JSON.parse(\"$Result\").showtitle",
                      "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/tvshow.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                      "itemaction":"RecentEpisodePlay",
                      "evalwrite":[{"variable":"EpisodeName","value":"DYNAMIK JSON.parse(\"$Result\").label"},
                                   {"variable":"Episodeid","value":"DYNAMIK JSON.parse(\"$Result\").episodeid"}, 
@@ -540,7 +645,7 @@
                   "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                   "itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                   "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                  "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
+                  "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                   "itemaction":"MoviePlay",
                   "evalwrite":[{"variable":"MovieTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                {"variable":"Movieid","value":"DYNAMIK JSON.parse(\"$Result\").movieid"}, 
@@ -576,7 +681,7 @@
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":(\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                      "itemaction":"RecentMoviePlay",
                      "evalwrite":[{"variable":"MovieTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                   {"variable":"Movieid","value":"DYNAMIK JSON.parse(\"$Result\").movieid"}, 
@@ -611,10 +716,10 @@
                      "queryresult":"$.result.sets.*",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label",
                      "itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
-                     "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
+                     "itemimage":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\"",
                      "evalwrite":[{"variable":"SetTitle","value":"DYNAMIK JSON.parse(\"$Result\").title"},
                                   {"variable":"Setid","value":"DYNAMIK JSON.parse(\"$Result\").setid"},
-                                  {"variable":"MovieBanner","value":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"HTTP://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\""}],
+                                  {"variable":"MovieBanner","value":"DYNAMIK (\"$ShowThumbnail\" == \"true\")?(JSON.parse(\"$Result\").thumbnail.includes(\"http\"))?decodeURIComponent(JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"\").slice(0, -1)):(JSON.parse(\"$Result\").thumbnail.includes(\"smb%3a\"))?JSON.parse(\"$Result\").thumbnail.replace(\"image://\",\"http://$MyKODIIp:$MyKODIPort/vfs/\").slice(0, -1):\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\":\"https://raw.githubusercontent.com/jac459/meta-kodi/main/Icons/movie.jpg\""}],
                      "evalnext":[
                         {
                            "test":true,
@@ -880,6 +985,9 @@
                ]}
             }
          }
-   }
-}   
+      }
+   } 
 }
+
+ 
+

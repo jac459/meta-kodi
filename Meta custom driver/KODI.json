@@ -104,7 +104,7 @@
       "persistedvariables": 
          {
          "ShowThumbnail":true,
-         "ShutdownCommand":"",
+         "ShutdownCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}",
          "ShutdownMenu":true,
          "ShutdownImmed": "",
          "WatchFilter":"", 

@@ -1,7 +1,7 @@
 { "name":"KODIPlayer",
    "manufacturer":"Ton&JAC",
    "type":"MEDIAPLAYER",
-   "version":10,
+   "version":13,
    "discover":{
      "welcomeheadertext":"Choose your KODI Instance",
      "welcomedescription":"powered by meta\nby JAC459/TonO",
@@ -19,7 +19,7 @@
       "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name DYNAMIK_INST_END",
       "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").fullname DYNAMIK_INST_END",
       "manufacturer": "Ton&JAC",
-      "version": 10,
+      "version": 13,
       "listeners" : {
          "KODIListener" : 
             {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",          
@@ -98,18 +98,19 @@
          "Player_TVShowTitle":"",
          "Player_Time":"",
          "Player_Duration":"",
+         "ShowThumbnail":true,
          "SetShutdownCommand":"\"System.Shutdown\"",
          "SetShutdownmenuCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}"
       },
-      "persistedvariables": 
-         {
+      "persistedvariables":{
          "ShowThumbnail":true,
          "ShutdownCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}",
          "ShutdownMenu":true,
          "ShutdownImmed": "",
-         "WatchFilter":"", 
+         "WatchFilter":"",
          "ShowWatched":""
-      }, 
+	},
+
       "switches":{
          "Show Thumbnails" : {"label":"", "listen":"ShowThumbnail"}
        },  
@@ -126,21 +127,14 @@
       "sliders": {
          "ShowWatched":
             {"label":"Show Watched (n->Y)", "unit" : "N/Y", "listen" : "ShowWatched", 
-            "evaldo":[{"test":"DYNAMIK $Result","then":"__ClearNotWatchedSwitch","or":"__SetNotWatchedSwitch"}]},
+            "evaldo":[{"test":"DYNAMIK $Result","then":"__ClearNotWatchedSwitch","or":"__SetNotWatchedSwitch"}]
+	         },
          "ShutdownMenu":
             {"label":"Show shutdownmenu(N->Y)", "unit" : "N/Y", "listen" : "ShutdownMenu", 
-            "evaldo":[{"test":"DYNAMIK $Result","then":"__SetShutdownMenu","or":"__SetShutdownImmed"}]}
+            "evaldo":[{"test":"DYNAMIK $Result","then":"__SetShutdownMenu","or":"__SetShutdownImmed"}]
+	         }
       }, 
       "buttons":{
-         "LIGHT":
-         {"label":"on",      
-            "type":"mqtt",
-            "command":"{\"topic\":\"homeassistant/#\"}",
-            "queryresult":"$.*",
-            "evalwrite":[
-               {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"}
-            ]
-         },
          "__SetPause":
          {"label":"",
             "type":"static",
@@ -189,7 +183,7 @@
                {"variable":"CacheResidency","value":"DYNAMIK let x = process.hrtime();x[0]-$CacheBuilt"}
             ],  
             "evaldo":[
-               {"test":"DYNAMIK $CacheResidency<0","then":"__CacheCheckMenu", "or":"__httpCheckMenu"}]
+               {"test":"DYNAMIK $CacheResidency<=10","then":"__CacheCheckMenu", "or":"__httpCheckMenu"}]
          },
          "__CacheCheckMenu":
             {"label":"",
@@ -328,11 +322,11 @@
 
             ]
          },
-         "STOP": 
+         "STOP":
          {"label":"",
             "type":"static",
             "command":"",
-            "evaldo":[{"test":"$PlayerID","then":"__STOP", "or":""}]                
+            "evaldo":[{"test":"$PlayerID","then":"__STOP", "or":""}]
          },
          "__STOP":
          {"label":"",                                 

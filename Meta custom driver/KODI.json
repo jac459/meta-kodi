@@ -112,7 +112,7 @@
 	},
 
       "switches":{
-         "Show Thumbnails" : {"label":"", "listen":"ShowThumbnail"}
+         "Thumbnails" : {"label":"", "listen":"ShowThumbnail"}
        },  
       "labels": {
          "PlayerID": {"label": "MyPlayerID","listen": "PlayerID"}, 
@@ -346,12 +346,12 @@
          "CHANNEL UP":
             {"label":"",
             "type":"webSocket",
-            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.Action\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
          },
          "CHANNEL DOWN":
          {"label":"",
             "type":"webSocket",
-            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.Action\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
          },
          "CURSOR LEFT":
          {"label":"",
@@ -502,15 +502,6 @@
             "type":"webSocket",
             "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.audionextlanguage\",\"id\":\"\"}}"
          },  
-         "ShowShutdownMenu" : 
-         {"label":"ShutdownMenu", 
-            "type":"static",
-            "command":"",
-            "queryresult":"",
-            "evalwrite":[
-               {"variable":"ShutdownMenu","value":"DYNAMIK  ((\"$ShutdownMenu\" == \"true\"))?\"false\":\"true\""}
-            ]     
-         },
          "MUTE TOGGLE":
          {"label":"",
             "type":"webSocket",

@@ -50,7 +50,7 @@
       },
    "variables":{
       "IPV6": "",
-      "MyKODIIp":"DYNAMIK_INST_START DYNAMIK  (JSON.parse(\"$Result\").ip DYNAMIK_INST_END",
+      "MyKODIIp":"DYNAMIK_INST_START DYNAMIK  JSON.parse(\"$Result\").ip DYNAMIK_INST_END",
       "MyKODIPort":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").port DYNAMIK_INST_END",
       "MyKODIMAC":"DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").mac DYNAMIK_INST_END",
       "KODIREQ":"",

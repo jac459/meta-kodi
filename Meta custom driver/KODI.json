@@ -17,7 +17,8 @@
       "name": "KODIPlayer",
       "type":"MEDIAPLAYER",
       "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] DYNAMIK_INST_END",
-      "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      "manufacturer": "Ton&JAC",
+      "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      
+      "manufacturer": "Ton&JAC",
       "version": 14,
       "listeners" : {
          "KODIListener" : 

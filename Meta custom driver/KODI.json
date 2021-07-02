@@ -1,7 +1,7 @@
 { "name":"KODIPlayer",
    "manufacturer":"Tono",
    "type":"MEDIAPLAYER",
-   "version":16,
+   "version":17,
    "discover":{
      "welcomeheadertext":"Choose your KODI Instance",
      "welcomedescription":"powered by meta\nby JAC459",
@@ -19,7 +19,7 @@
       "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] DYNAMIK_INST_END",
       "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      
       "manufacturer": "Tono",
-      "version": 16,
+      "version": 17,
       "listeners" : {
          "KODIListener" : 
             {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",          
@@ -46,7 +46,7 @@
                "queryresult":"$.",
                "pooltime":"10000", "poolduration":"",
                "evalwrite" : [ 
-                  {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
+                  {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse('$Result')[0].result[\"VideoPlayer.Duration\"]"},
                   {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
                   {"variable" : "Player_Time",         "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Time\"]"},
                   {"variable" : "Player_OriginalTitle","value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.OriginalTitle\"]"},
@@ -198,9 +198,12 @@
             {"label":"",
             "type":"static",
              "command":"",
-            "evaldo":[
-               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
-         },
+             "evaldo":[
+               {"test":"DYNAMIK \"$Window_ID\"!=\"$Fullscreen_ID\"","then":"__Nav_Menu"},
+               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\" && \"$ReturnMenu\" == \"__PAUSE\"","then":"__PAUSE"},
+               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\" && \"$ReturnMenu\" == \"__Nav_Playing\"","then":"__Nav_Playing"}
+            ]
+      },
          "__httpCheckMenu":
             {"label":"",
             "type":"http-rest",
@@ -210,9 +213,12 @@
                {"variable":"Window_ID","value":"DYNAMIK  ((\"$Result\" == \"undefined\"))?0:JSON.parse(\"$Result\").id"},
                {"variable":"CacheBuilt","value":"DYNAMIK process.hrtime()[0];"}
                   ],  
-            "evaldo":[
-               {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\"","then":"$ReturnMenu", "or":"__Nav_Menu"}]
-         },
+                  "evaldo":[
+                     {"test":"DYNAMIK \"$Window_ID\"!=\"$Fullscreen_ID\"","then":"__Nav_Menu"},
+                     {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\" && \"$ReturnMenu\" == \"__PAUSE\"","then":"__PAUSE"},
+                     {"test":"DYNAMIK \"$Window_ID\"==\"$Fullscreen_ID\" && \"$ReturnMenu\" == \"__Nav_Playing\"","then":"__Nav_Playing"}
+                  ]
+               },
          "__Nav_Menu":
          {"label":"",
             "type":"http-rest",
@@ -220,13 +226,13 @@
          },               
          "__Nav_Playing":
          {"label":"",
-            "type":"webSocket",
-            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"$PlayerSeek\"},\"id\":\"\"}}"
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\",\"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"params\":{\"action\":\"$PlayerSeek\"},\"id\":\"\"}}"
          },     
          "__Nav_Playing_Enter":     
          {"label":"",                                 
-            "type":"webSocket",
-            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"\",\"params\":{\"playerid\":1}}}"
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\",\"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.PlayPause\",\"id\":\"\",\"params\":{\"playerid\":1}}}"
          },
          "__INITIALISE": {"label": "", "type":"static", "command":"."
          },
@@ -289,8 +295,8 @@
          },
          "__MenuShutdown": 
          {"label":"",
-            "type":"webSocket",
-            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"},\"id\":\"PowerOff\"}}",
+            "type":"http-rest",
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\",\"message\":{\"jsonrpc\":\"2.0\",\"method\":\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"},\"id\":\"PowerOff\"}}",
             "evaldo":[
             {"test":true,"then":"__CLEANUP", "or":""},
             {"test":true,"then":"__PERSIST", "or":""}
@@ -567,7 +573,7 @@
                      "type":"http-get",
                      "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\",\"playcount\",\"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                      "queryresult":"$.result.seasons.*",
-                     "itemimage":"$TVShowBanner",
+                     "itemimage":"$ThumbnailFound",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
                      "evalwrite":[
                                   {"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],

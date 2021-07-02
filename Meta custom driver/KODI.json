@@ -46,7 +46,7 @@
                "queryresult":"$.",
                "pooltime":"10000", "poolduration":"",
                "evalwrite" : [ 
-                  {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse('$Result')[0].result[\"VideoPlayer.Duration\"]"},
+                  {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
                   {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
                   {"variable" : "Player_Time",         "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Time\"]"},
                   {"variable" : "Player_OriginalTitle","value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.OriginalTitle\"]"},

@@ -32,12 +32,19 @@
                   {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Application.OnVolumeChanged\"))", "then":"__GetPlayerID", "or":""}
                ]
             },
+            "KODIPlayerid" : 
+            {"type":"static", "command":"", "queryresult" : "",          
+            "pooltime":"5000", "poolduration":"",
+            "evaldo":[ 
+                  {"test":true, "then":"__GetPlayerID", "or":""}
+               ]
+            },
             "KODIInfo" : 
                {"label":"",
                "type":"http-get",
                "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\": \"2.0\", \"id\": \"Getinfi-items\",\"method\":\"XBMC.GetInfoLabels\",\"params\": {\"labels\":[\"Player.PlaySpeed\",\"Player.Title\",\"Player.FinishTime\", \"VideoPlayer.OriginalTitle\",\"VideoPlayer.Title\",\"VideoPlayer.TVShowTitle\",\"VideoPlayer.Time\",\"VideoPlayer.Duration\"]}}",
                "queryresult":"$.",
-                                 "pooltime":"10000", "poolduration":"",
+               "pooltime":"10000", "poolduration":"",
                "evalwrite" : [ 
                   {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
                   {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},

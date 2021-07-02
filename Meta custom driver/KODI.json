@@ -528,20 +528,7 @@
          "feeders":{
             "TVShows":{"label":"TVShow list",
                "commandset":[
-                  {
-                     "type":"static",
-                     "command":"",
-                     "itemtype":"tile",
-                     "itemaction":"",
-                     "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/tweak.jpg"
-                  },
-                  {
-                     "type":"static",
-                     "command":"",
-                     "itemtype":"header",
-                     "itemaction":"",
-                     "itemimage":"https://raw.githubusercontent.com/jac459/metadriver/master/pictures/tweak.jpg"
-                  },
+
                   {
                      "type":"http-get",			
                      "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetTVShows\",\"id\":\"TV\",\"params\":{$WatchFilter\"properties\":[\"title\",\"thumbnail\",\"fanart\",\"playcount\"],\"sort\":{\"order\":\"ascending\",\"method\":\"title\",\"ignorearticle\": true }}}",
@@ -563,13 +550,19 @@
             "TVSeasons":{
                "label":"TVShow seasons",
                "commandset":[
-                  {  
+                  {
                      "type":"static",
                      "command":"",
                      "itemtype":"tile",
-                     "itemaction":""                      
+                     "itemaction":"",
+                     "itemimage":"$TVShowBanner"
                   },
                   {
+                     "type":"static",
+                     "itemtext":"This is a test",
+                     "itemtype":"header",
+                     "itemaction":""                  
+                  },                  {
                      "type":"http-get",
                      "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\",\"playcount\",\"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                      "queryresult":"$.result.seasons.*",
@@ -590,8 +583,8 @@
                "commandset":[
                   {
                      "type":"static",
-                     "command":"",
-                     "itemtype":"tile",
+                     "command":"This is a test",
+                     "itemtype":"header",
                      "itemaction":""
                   },
                   {"type":"http-get",

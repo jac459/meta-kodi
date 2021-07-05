@@ -1,7 +1,7 @@
 { "name":"KODIPlayer",
    "manufacturer":"Tono",
    "type":"MEDIAPLAYER",
-   "version":18,
+   "version":19,
    "discover":{
      "welcomeheadertext":"Choose your KODI Instance",
      "welcomedescription":"powered by meta\nby JAC459",
@@ -19,10 +19,10 @@
       "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] DYNAMIK_INST_END",
       "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      
       "manufacturer": "Tono",
-      "version": 18,
+      "version": 19,
             "listeners" : {
          "KODIListener" : 
-            {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",          
+            {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",  "ishub":false,        
             "evaldo":[ 
                   {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPause\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPause", "or":""},
                   {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnResume\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
@@ -34,7 +34,7 @@
             },
             "KODIPlayerid" : 
             {"type":"static", "command":"", "queryresult" : "",          
-            "pooltime":"5000", "poolduration":"",
+            "pooltime":"5000", "poolduration":"","ishub":false,
             "evaldo":[ 
                   {"test":true, "then":"__GetPlayerID", "or":""}
                ]
@@ -44,7 +44,7 @@
                "type":"http-get",
                "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\": \"2.0\", \"id\": \"Getinfi-items\",\"method\":\"XBMC.GetInfoLabels\",\"params\": {\"labels\":[\"Player.PlaySpeed\",\"Player.Title\",\"Player.FinishTime\", \"VideoPlayer.OriginalTitle\",\"VideoPlayer.Title\",\"VideoPlayer.TVShowTitle\",\"VideoPlayer.Time\",\"VideoPlayer.Duration\"]}}",
                "queryresult":"$.",
-               "pooltime":"10000", "poolduration":"",
+               "pooltime":"10000", "poolduration":"","ishub":false,
                "evalwrite" : [ 
                   {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
                   {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
@@ -66,7 +66,7 @@
          "RPCPort":"9090",
          "TVShowTitle": "", 
          "TVShowid": "",
-         "TVShowBanner":"",         
+         "TVShowBanner":"",   
          "SeasonName":"",
          "Seasonid":"",
          "EpisodeName":"",
@@ -566,7 +566,7 @@
                      "type":"http-get",
                      "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.GetSeasons\",\"id\":\"TV\",\"params\":{\"tvshowid\":$TVShowid,\"properties\": [\"thumbnail\",\"playcount\",\"tvshowid\", \"season\", \"showtitle\"],\"sort\":{\"order\":\"ascending\",\"method\":\"label\",\"ignorearticle\": true }}}",
                      "queryresult":"$.result.seasons.*",
-                     "itemimage":"$TVShowBanner",
+                     "itemimage":"DYNAMIK (JSON.parse(\"$Result\").playcount != 0)?\"https://raw.githubusercontent.com/jac459/meta-kodi/master/Icons/checkmark.jpg\":\"$TVShowBanner\"",
                      "itembrowse":"DYNAMIK JSON.parse(\"$Result\").label","itemname":"DYNAMIK JSON.parse(\"$Result\").label","itemlabel":"DYNAMIK JSON.parse(\"$Result\").label",
                      "evalwrite":[
                                   {"variable":"SeasonName","value":"DYNAMIK JSON.parse(\"$Result\").label"},{"variable":"Seasonid","value":"DYNAMIK JSON.parse(\"$Result\").season"}],
@@ -704,7 +704,7 @@
                      "itemaction":""
                      },
                      {"command":"{}","type":"static",
-                     "itemname":"$TVShowTitle",
+                     "itemname":"$EpisodeName",
                      "itemlabel":"$EpisodeName",
                      "itembrowse":"12",
                      "itemimage":"$Episodeimage",

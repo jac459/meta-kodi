@@ -75,6 +75,7 @@
          "MovieTitle":"",
          "Movieid":"",
          "MovieBanner":"",
+         "MovieSetImage":"",
          "SetTitle":"",
          "Setid": "",
          "Source":"",
@@ -605,16 +606,9 @@
                   {
                   "type":"static",
                   "command":"{}",
-                  "itemtext":"This is a test, but it is not working",
-                  "itemtype":"header",
-                  "itemaction":""                  
-                  },            
-                  {
-                  "type":"static",
-                  "command":"{}",
-                  "itemtext":"Stop",
-                  "itemtype":"controlbutton",
-                  "itemaction":""
+                  "itemname":"Stop",
+                  "itemaction": "Stop",
+                  "itemtype":"button"
                   },
                   {"command":"{}","type":"static",
                   "itemname":"$TVShowTitle",
@@ -684,16 +678,9 @@
                      {
                      "type":"static",
                      "command":"{}",
-                     "itemtext":"This is a test, but it is not working",
-                     "itemtype":"header",
-                     "itemaction":""                  
-                     },            
-                     {
-                     "type":"static",
-                     "command":"{}",
-                     "itemtext":"Stop",
-                     "itemtype":"controlbutton",
-                     "itemaction":""
+                     "itemname":"Stop",
+                     "itemaction": "Stop",
+                     "itemtype":"button"
                      },
                      {"command":"{}","type":"static",
                      "itemname":"$EpisodeName",
@@ -761,18 +748,9 @@
                      "type":"static",
                      "command":"{}",
                      "queryresult":"$",
-                     "itemtext":"This is a testm, not working",
-                     "itemtype":"header",
-                     "itemaction":""                  
-                     },            
-                     {
-                     "type":"static",
-                     "command":"{}",
-                     "queryresult":"$",
-                     "itemtext":"Stop",
-                     "itemtype":"controlbutton",
-                     "itemaction":""
-                     },
+                     "itemname":"Stop",
+                     "itemaction": "Stop",
+                     "itemtype":"button"                     },
                      {
                      "type":"static",
                      "command":"{}",
@@ -839,17 +817,9 @@
                      "type":"static",
                      "command":"{}",
                      "queryresult":"$",
-                     "itemtext":"This is a testm, not working",
-                     "itemtype":"header",
-                     "itemaction":""                  
-                     },            
-                     {
-                     "type":"static",
-                     "command":"{}",
-                     "queryresult":"$",
-                     "itemtext":"Stop",
-                     "itemtype":"controlbutton",
-                     "itemaction":""
+                     "itemname":"Stop",
+                     "itemaction": "Stop",
+                     "itemtype":"button"
                      },
                      {
                      "type":"static",
@@ -933,17 +903,9 @@
                      "type":"static",
                      "command":"{}",
                      "queryresult":"$",
-                     "itemtext":"This is a testm, not working",
-                     "itemtype":"header",
-                     "itemaction":""                  
-                     },            
-                     {
-                     "type":"static",
-                     "command":"{}",
-                     "queryresult":"$",
-                     "itemtext":"Stop",
-                     "itemtype":"controlbutton",
-                     "itemaction":""
+                     "itemname":"Stop",
+                     "itemaction": "Stop",
+                     "itemtype":"button"
                      },
                      {
                      "type":"static",
@@ -1216,17 +1178,9 @@
                      "type":"static",
                      "command":"{}",
                      "queryresult":"$",
-                     "itemtext":"This is a testm, not working",
-                     "itemtype":"header",
-                     "itemaction":""                  
-                     },            
-                     {
-                     "type":"static",
-                     "command":"{}",
-                     "queryresult":"$",
-                     "itemtext":"Stop",
-                     "itemtype":"controlbutton",
-                     "itemaction":""
+                     "itemname":"Stop",
+                     "itemaction": "Stop",
+                     "itemtype":"button"
                      },
                      {
                      "type":"static",

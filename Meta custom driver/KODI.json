@@ -248,8 +248,10 @@
             ]   
          },
          "POWER ON":  
-         {"label":"",                                 
-            "type":"http-rest",
+         {"label":"",     
+         "commandset":[
+            {"type":"wol", "command":"$MyKODIMAC", "queryresult":""},                            
+            {"type":"http-rest",
             "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
             "queryresult":"$.result[0]",
             "evalwrite":[
@@ -261,8 +263,9 @@
             "evaldo":[{"test":true,"then":"__INITIALISE", "or":""},
                {"test":true, "then":"__StartupMessage", "or":""},
                {"test":"$PlayerID == 1", "then":"__CheckPlaying", "or":""}
-
-            ]   
+               ]  
+            } 
+            ]
          },
          "__CheckPlaying":
          {"label":"",      
@@ -366,12 +369,12 @@
          "CHANNEL UP":
             {"label":"",
                "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}}"
          },
          "CHANNEL DOWN":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
          },
          "CURSOR LEFT":
          {"label":"",
@@ -436,12 +439,12 @@
          "PAGE UP":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}}"
          },
          "PAGE DOWN":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
          },
          "PLAY":
          {"label":"",
@@ -553,7 +556,7 @@
                            "then":"TVSeasons",
                            "or":""
                         } 
-                     ]}  
+                     ]}
                   ]
                },
                "TVSeasons":{

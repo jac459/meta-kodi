@@ -16,47 +16,8 @@
    "template" : {
       "name": "KODIPlayer",
       "type":"MEDIAPLAYER",
-      "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] DYNAMIK_INST_END",
-      "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      
       "manufacturer": "Tono",
       "version": 21,
-            "listeners" : {
-         "KODIListener" : 
-            {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",  "ishub":false,        
-            "evaldo":[ 
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPause\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPause", "or":""},
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnResume\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPlay\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnStop\"))", "then":"__SetStopped", "or":""},
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"System.OnQuit\"))", "then":"__SYSTEMSTOP", "or":""},
-                  {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Application.OnVolumeChanged\"))", "then":"__GetPlayerID", "or":""}
-               ]
-            },
-            "KODIPlayerid" : 
-            {"type":"static", "command":"", "queryresult" : "",          
-            "pooltime":"5000", "poolduration":"","ishub":false,
-            "evaldo":[ 
-                  {"test":true, "then":"__GetPlayerID", "or":""}
-               ]
-            },
-            "KODIInfo" : 
-               {"label":"",
-               "type":"http-get",
-               "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\": \"2.0\", \"id\": \"Getinfi-items\",\"method\":\"XBMC.GetInfoLabels\",\"params\": {\"labels\":[\"Player.PlaySpeed\",\"Player.Title\",\"Player.FinishTime\", \"VideoPlayer.OriginalTitle\",\"VideoPlayer.Title\",\"VideoPlayer.TVShowTitle\",\"VideoPlayer.Time\",\"VideoPlayer.Duration\"]}}",
-               "queryresult":"$.",
-               "pooltime":"10000", "poolduration":"","ishub":false,
-               "evalwrite" : [ 
-                  {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
-                  {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
-                  {"variable" : "Player_Time",         "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Time\"]"},
-                  {"variable" : "Player_OriginalTitle","value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.OriginalTitle\"]"},
-                  {"variable" : "Player_Title",        "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Title\"]"},
-                  {"variable" : "Player_TVShowTitle",  "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.TVShowTitle\"]"},
-                  {"variable" : "Player_PlaySpeed",    "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.PlaySpeed\"]"}                 ]
-               }
-   
-      },
-
       "variables":{
          "IPV6": "",
          "MyKODIIp":"DYNAMIK_INST_START DYNAMIK  JSON.parse(\"$Result\").ip DYNAMIK_INST_END",
@@ -110,6 +71,7 @@
          "Player_TVShowTitle":"",
          "Player_Time":"",
          "Player_Duration":"",
+         "IsConnected":false,
          "ShowThumbnail":true,
          "SetShutdownCommand":"\"System.Shutdown\"",
          "SetShutdownmenuCommand":"\"GUI.ActivateWindow\",\"params\":{\"window\": \"shutdownmenu\"}"
@@ -121,6 +83,51 @@
          "ShutdownImmed": "",
          "WatchFilter":"",
          "ShowWatched":""
+   },
+   "dynamicname": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] DYNAMIK_INST_END",
+   "dynamicid": "DYNAMIK_INST_START DYNAMIK JSON.parse(\"$Result\").name.split(\"._xbmc-jsonrpc-h._tcp.local\")[0] + \"@\"+JSON.parse(\"$Result\").ip DYNAMIK_INST_END",      
+   "listeners" : {
+      "KODIListener" : 
+         {"type":"webSocket", "command":{"connection":"ws://$MyKODIIp:$RPCPort", "message": "message"}, "queryresult" : "",  "ishub":false,
+         "evaldo":[ 
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").id == \"PlayerID\") && JSON.parse(\"$Result\").result[0] != undefined && JSON.parse(\"$Result\").result[0].playerid == 1 )", "then":"__SetPlayerID1", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").id == \"PlayerID\") && JSON.parse(\"$Result\").result[0] != undefined && JSON.parse(\"$Result\").result[0].playerid == 2 )", "then":"__SetPlayerID2", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPause\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPause", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnResume\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnPlay\") && JSON.parse(\"$Result\").params.data.player.playerid == 1)", "then":"__SetPlaying", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Player.OnStop\"))", "then":"__SetStopped", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"System.OnQuit\"))", "then":"__SYSTEMSTOP", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").method == \"Application.OnVolumeChanged\"))", "then":"__GetPlayerID", "or":""},
+               {"test":"DYNAMIK ( (\"$Result\" != \"\") && (JSON.parse(\"$Result\").id == \"PlayerID\") && JSON.parse(\"$Result\").result[0] == undefined)", "then":"__SetStopped", "or":""},
+               {"test":"DYNAMIK (\"$IsConnected\"==\"false\")", "then":"__StartupMessage", "or":""}
+            ],
+         "evalwrite":[
+            {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
+            {"variable":"PlayerID","value":"DYNAMIK (\"$Result\" != \"\") && (JSON.parse(\"$Result\").id == \"PlayerID\") && (JSON.parse(\"$Result\").result[0]==undefined)?0:JSON.parse(\"$Result\").result[0].playerid"}
+            ]  
+         },
+         "KODIPlayerid" : 
+         {"type":"static", "command":"", "queryresult" : "",          
+         "pooltime":"5000", "poolduration":"","ishub":false,
+         "evaldo":[ 
+               {"test":true, "then":"__GetPlayerID", "or":""}
+            ]
+         },
+         "KODIInfo" : 
+            {"label":"",
+            "type":"http-get",
+            "command":"http://$MyKODIIp:$MyKODIPort/jsonrpc?request={\"jsonrpc\": \"2.0\", \"id\": \"Getinfi-items\",\"method\":\"XBMC.GetInfoLabels\",\"params\": {\"labels\":[\"Player.PlaySpeed\",\"Player.Title\",\"Player.FinishTime\", \"VideoPlayer.OriginalTitle\",\"VideoPlayer.Title\",\"VideoPlayer.TVShowTitle\",\"VideoPlayer.Time\",\"VideoPlayer.Duration\"]}}",
+            "queryresult":"$.",
+            "pooltime":"5000", "poolduration":"","ishub":false,
+            "evalwrite" : [ 
+               {"variable" : "Player_Duration",     "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Duration\"]"},
+               {"variable" : "Player_FinishTime",   "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.FinishTime\"]"},
+               {"variable" : "Player_Time",         "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Time\"]"},
+               {"variable" : "Player_OriginalTitle","value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.OriginalTitle\"]"},
+               {"variable" : "Player_Title",        "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.Title\"]"},
+               {"variable" : "Player_TVShowTitle",  "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"VideoPlayer.TVShowTitle\"]"},
+               {"variable" : "Player_PlaySpeed",    "value" : "DYNAMIK JSON.parse(\"$Result\")[0].result[\"Player.PlaySpeed\"]"}                 ]
+            }
    },
 
    "switches":{
@@ -148,14 +155,39 @@
 	         }
       }, 
       "buttons":{
+         "POWER ON": {"type":"wol", "command":"$MyKODIMAC", "queryresult":"", "evaldo":[{"test":true,"then":"__RESTART", "or":""}]}, 
+         "__RESTART": {"type":"static", "command":".", 
+            "evalwrite":[
+               {"variable":"MyStatus","value":"Connecting to KODI-device..."},
+               {"variable":"IsConnected","value":false} 
+            ],
+            "evaldo":[{"test":true,"then":"__INITIALISE", "or":""}, {"test":true,"then":"__GetPlayerID", "or":""}]
+         },
+         "__GetPlayerID":
+         {"Label":"", 
+            "type":"webSocket",
+            "command":"{\"connection\": \"ws://$MyKODIIp:$RPCPort\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"PlayerID\"}}",
+               "queryresult":"$.",  
+               "evaldo":[{"test":"DYNAMIK (JSON.parse(\"$Result\").readystate!=1) ","then":"__RESTART"}]
+         },
+         "__GetPlayerIDOLD":
+         {"label":"",
+         "type":"http-rest",
+         "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
+         "queryresult":"$.result[0]",
+         "evalwrite":[
+            {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
+            {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"}
+            ]  
+      },      
+
          "__SetPause":
          {"label":"",
             "type":"static",
             "command":"",
             "queryresult":"",
             "evalwrite":[
-               {"variable":"MyStatus","value":"Paused"},
-               {"variable":"PlayerID","value":1}
+               {"variable":"MyStatus","value":"Paused"}
             ]  
          }, 
          "__SetPlaying":
@@ -164,8 +196,7 @@
             "command":"",
             "queryresult":"",
             "evalwrite":[
-               {"variable":"MyStatus","value":"Playing"},
-               {"variable":"PlayerID","value":1}
+               {"variable":"MyStatus","value":"Playing"}
                ]  
          },
          "__SetStopped":
@@ -177,17 +208,25 @@
                {"variable":"MyStatus","value":"Stopped"},
                {"variable":"PlayerID","value":0}
                ]  
-         },    
-         "__GetPlayerID":
-            {"label":"",
-            "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
-            "queryresult":"$.result[0]",
+         },       
+         "__SetPlayerID1":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "queryresult":"",
             "evalwrite":[
-               {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
-               {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"}
+               {"variable":"PlayerID","value":1}
                ]  
-         },         
+         },
+         "__SetPlayerID2":
+         {"label":"",
+            "type":"static",
+            "command":"",
+            "queryresult":"",
+            "evalwrite":[
+               {"variable":"PlayerID","value":2}
+               ]  
+         },
          "__CheckMenu":
             {"label":"",
             "type":"static",
@@ -196,7 +235,7 @@
                {"variable":"CacheResidency","value":"DYNAMIK let x = process.hrtime();x[0]-$CacheBuilt"}
             ],  
             "evaldo":[
-               {"test":"DYNAMIK $CacheResidency<=10","then":"__CacheCheckMenu", "or":"__httpCheckMenu"}]
+               {"test":"DYNAMIK $CacheResidency<=2","then":"__CacheCheckMenu", "or":"__httpCheckMenu"}]
          },
          "__CacheCheckMenu":
             {"label":"",
@@ -247,26 +286,6 @@
             "evaldo":[{"test":true,"then":"__GetPlayerID", "or":""}
             ]   
          },
-         "POWER ON":  
-         {"label":"",     
-         "commandset":[
-            {"type":"wol", "command":"$MyKODIMAC", "queryresult":""},                            
-            {"type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Player.GetActivePlayers\",\"id\":\"\"}}",
-            "queryresult":"$.result[0]",
-            "evalwrite":[
-               {"variable":"MYRESULT","value":"DYNAMIK  (\"$Result\")"},
-               {"variable":"PlayerID","value":"DYNAMIK (\"$Result\"==\"undefined\")?0:JSON.parse(\"$Result\").playerid"},
-               {"variable":"MyStatus","value":"DYNAMIK (\"$Result\"==\"undefined\")?\"Stopped\":JSON.parse(\"$Result\").playerid"},
-               {"variable":"CacheBuilt","value":"0"}
-            ],  
-            "evaldo":[{"test":true,"then":"__INITIALISE", "or":""},
-               {"test":true, "then":"__StartupMessage", "or":""},
-               {"test":"$PlayerID == 1", "then":"__CheckPlaying", "or":""}
-               ]  
-            } 
-            ]
-         },
          "__CheckPlaying":
          {"label":"",      
             "type":"http-rest",
@@ -279,13 +298,21 @@
          "__StartupMessage":  
          {"label":"",                                 
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"id\":\"POWER-ON\",\"method\":\"GUI.ShowNotification\", \"params\":{\"title\": \"NEEO-Metadriver\",\"message\": \"NEEO-connection active\",\"displaytime\":5000}}}"  
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"id\":\"POWER-ON\",\"method\":\"GUI.ShowNotification\", \"params\":{\"title\": \"NEEO-Metadriver\",\"message\": \"NEEO-connection active\",\"displaytime\":5000}}}",
+            "evalwrite":[
+               {"variable":"IsConnected","value":true},
+               {"variable":"MyStatus","value":"Connected!"},
+               {"variable":"CacheBuilt","value":"0"}
+            ]
          },
          "POWER OFF":  
          {"label":"",    
             "type":"http-rest",
             "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":$ShutdownCommand,\"id\":\"shutdown\"}}",
             "queryresult":"",
+            "evalwrite":[
+               {"variable":"IsConnected","value":false}
+            ],
             "evaldo":[
                {"test":true,"then":"__PERSIST", "or":""},
                {"test":true,"then":"__CLEANUP", "or":""}
@@ -369,12 +396,12 @@
          "CHANNEL UP":
             {"label":"",
                "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
          },
          "CHANNEL DOWN":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}"
          },
          "CURSOR LEFT":
          {"label":"",
@@ -439,12 +466,12 @@
          "PAGE UP":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pageup\"}}"
          },
          "PAGE DOWN":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}}"
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.ExecuteAction\",\"id\":\"\",\"params\":{\"action\": \"pagedown\"}}"
          },
          "PLAY":
          {"label":"",
@@ -492,8 +519,9 @@
          "BACK":
          {"label":"",
             "type":"http-rest",
-            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.back\",\"id\":\"\"}}"
-         },
+            "command":"{\"verb\":\"post\",\"call\":\"http://$MyKODIIp:$MyKODIPort/jsonrpc?request=\", \"message\":{\"jsonrpc\":\"2.0\",\"method\":\"Input.back\",\"id\":\"\"}}",
+            "evalwrite":[{"variable":"CacheBuilt","value":"0"}] 
+            },
          "MENU":
          {"label":"",
             "type":"static",
@@ -556,7 +584,7 @@
                            "then":"TVSeasons",
                            "or":""
                         } 
-                     ]}
+                     ]}  
                   ]
                },
                "TVSeasons":{
@@ -1210,3 +1238,4 @@
       } 
    }
 }
+

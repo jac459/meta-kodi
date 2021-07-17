@@ -6,9 +6,9 @@
      "welcomeheadertext":"Choose your KODI Instance",
      "welcomedescription":"powered by meta\nby JAC459",
      "command": {
-       "type": "static",
-       "command": "$LocalDevices",
-       "queryresult": [
+      "type": "mDNS",
+      "command": "",
+      "queryresult": [
          "$.[?(@.short=='_xbmc-jsonrpc-h._tcp.local')]"
       ]  
       }

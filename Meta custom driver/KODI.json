@@ -1,7 +1,7 @@
 { "name":"KODIPlayer",
    "manufacturer":"Tono",
    "type":"MEDIAPLAYER",
-   "version":23,
+   "version":24,
    "variables": {"MYRESULT":""}, 
    "discover":{
      "welcomeheadertext":"Choose your KODI Instance",
@@ -120,7 +120,7 @@
             ]  
          },
          "KODIPlayerid" : 
-         {"type":"static", "command":"", "queryresult" : "",          
+         {"type":"static", "command":"$MyKODIIp listener", "queryresult" : "",          
          "pooltime":"5000", "poolduration":"","ishub":false,
          "evaldo":[ 
                {"test":true, "then":"__GetPlayerID", "or":""}

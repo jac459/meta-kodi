@@ -1,7 +1,7 @@
 { "name":"KODIPlayer",
    "manufacturer":"Tono",
    "type":"MEDIAPLAYER",
-   "version":24,
+   "version":25,
    "variables": {"MYRESULT":""}, 
    "discover":{
      "welcomeheadertext":"Choose your KODI Instance",
